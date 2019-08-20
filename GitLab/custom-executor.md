@@ -9,7 +9,7 @@ MacStadium provides Custom executor scripts that can be used to run CI/CD pipeli
 ## Requirements
 
 - GitLab [Runner][runner]
-- jq[jq] - command-line JSON processor used by the provided scripts
+- [jq][jq] - command-line JSON processor used by the provided scripts
 
 ## Set up a GitLab Runner
 
@@ -19,7 +19,7 @@ To set up a GitLab Runner, you need to:
 2. [Obtain a token][obtain-token]. The token will be used in **Step 3** to register the newly installed GitLab Runner.
 3. [Register][register-runner] the Runner. This is the process that binds the Runner to GitLab.  
 **Note**: When asked to enter the executor type, select `custom`.
-4. Copy the provided scripts to the Runner machine: [base.sh](base.sh), [prepare.sh](prepare.sh), [run.sh](run.sh), [cleanup.sh](cleanup.sh).  
+4. Copy the provided scripts to the Runner machine: [base.sh](scripts/base.sh), [prepare.sh](scripts/prepare.sh), [run.sh](scripts/run.sh), [cleanup.sh](scripts/cleanup.sh).  
 **Note**: All scripts should be in the same directory. For example you can add them to `/var/custom-runner`.
 5. Verify the scripts can be executed by running `chmod +x path_to_script` in the command line.
 6. Update the Runner config file:
