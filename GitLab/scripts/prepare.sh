@@ -23,3 +23,17 @@ echo "$vm_id;$node" > $BUILD_ID
 vm_ip=$(echo $vm_info | jq -r '.ip')
 vm_ssh_port=$(echo $vm_info | jq -r '.ssh_port')
 echo "$vm_ip;$vm_ssh_port" > $CONNECTION_INFO_ID
+
+echo "Waiting for sshd to be available"
+for i in $(seq 1 30); do
+    if ssh -i /root/.ssh/id_rsa -o StrictHostKeyChecking=no $CUSTOM_ENV_ORKA_VM_USER@$vm_ip -p $vm_ssh_port >/dev/null 2>/dev/null; then
+        break
+    fi
+
+    if [ "$i" == "30" ]; then
+        echo 'Waited 30 seconds for sshd to start, exiting...'
+        exit "$SYSTEM_FAILURE_EXIT_CODE"
+    fi
+
+    sleep 1s
+done
