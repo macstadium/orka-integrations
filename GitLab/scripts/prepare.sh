@@ -26,7 +26,7 @@ echo "$vm_ip;$vm_ssh_port" > $CONNECTION_INFO_ID
 
 echo "Waiting for sshd to be available"
 for i in $(seq 1 30); do
-    if ssh -i /root/.ssh/id_rsa -o StrictHostKeyChecking=no $CUSTOM_ENV_ORKA_VM_USER@$vm_ip -p $vm_ssh_port >/dev/null 2>/dev/null; then
+    if ssh -i /root/.ssh/id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $CUSTOM_ENV_ORKA_VM_USER@$vm_ip -p $vm_ssh_port "echo ok" >/dev/null 2>/dev/null; then
         break
     fi
 
