@@ -12,6 +12,10 @@ MacStadium provides a Jenkins plugin that integrates with Orka. It can be found 
 
 The integration guide for GitLab can be found [here](GitLab/README.md).
 
+### Buildkite
+
+The integration guide for Buildkite can be found [here](Buildkite/README.md).
+
 [orka]: https://www.macstadium.com/orka
 [jenkins-plugin]: https://plugins.jenkins.io/macstadium-orka
 [badge-license]: https://img.shields.io/badge/License-MIT-green.svg
