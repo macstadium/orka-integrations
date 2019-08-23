@@ -5,11 +5,39 @@ This guide explains how to set up a GitLab [Custom][custom] executor in a MacSta
 The Custom executor allows you to run builds on environments not supported natively by the GitLab [Runner][runner] (such as Orka). It also provides the flexibility to define how the environment should be set up and cleaned up.
 
 MacStadium provides Custom executor scripts that can be used to run CI/CD pipelines in an Orka environment.
+The Custom executor spins up ephemeral Mac machines, which will execute the CI/CD jobs.
 
 ## Requirements
 
 - GitLab [Runner][runner]
 - [jq][jq] - command-line JSON processor used by the provided scripts
+
+## Setup overview
+
+1. Set up an Orka VM base image. The image must have SSH enabled.
+2. Set up an Orka VM config using the base image from **Step 1**. The Orka VM config is the container template that Custom executor will use to spin up ephemeral Mac machines.
+3. Set up the GitLab Runner.
+
+## Set up an Orka VM base image
+
+The Orka VM is used by the Custom executor to run CI/CD jobs.
+
+If your Orka environment does not provide a base image pre-configured with SSH login with a private key enabled, you need to create one yourself.
+
+You will later use this base image to create a VM config (a container template) for the ephemeral agent.
+
+1. Set up a new Orka VM. You can set up an Orka VM using the Orka [CLI][cli] or [REST API][api]. For more information, see the Orka [quick start guide][quick-start].  
+2. Connect to the Orka VM using SSH or VNC.  
+**Note**: The VM IP and the SSH and VNC ports are displayed once the VM is deployed in Orka.  
+3. Verify that SSH login with a private key is enabled. SSH login is used by the Custom executor to communicate with the Orka VM.  
+**Note**: The private ssh key must not have password as the GitLab Runner will not be able to load it.
+4. On your local machine, run `orka image save`. The command saves the base image in Orka.
+
+## Set up an Orka VM config for the ephemeral agents
+
+To allow the Custom executor to spin up ephemeral VMs in Orka, create an Orka VM config (a container template) that uses the SSH-enabled base image you just created.  
+
+You can create an Orka VM config using the Orka [CLI][cli] or [REST API][api]. For more information, see the Orka [quick start guide][quick-start].
 
 ## Set up a GitLab Runner
 
@@ -29,6 +57,8 @@ To set up a GitLab Runner, you need to:
 
     **Note**: A template config file is available [here](template-config.md).  
     For information about the location of the file and its contents, see the GitLab Runner [configuration page][config-page] and the Custom executor [configuration page][custom-config-page].
+7. Verify [jq][jq] is installed. For more information, see [jq][jq] page.
+8. Verify that the private SSH key for connecting to the ephemeral VM is present on the Runner machine under this path `/root/.ssh/id_rsa`. This key was created earlier during the Orka base image setup.
 
 ## GitLab CI/CD environment variables
 

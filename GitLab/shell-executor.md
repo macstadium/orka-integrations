@@ -11,14 +11,14 @@ The Shell executor allows you to run builds locally on the machine where the Git
 
 ## Set up an Orka VM
 
-You can set up an Orka VM using the Orka [CLI][cli] or [REST API][api]. For more information about, see the Orka [quick start guide][quick-start].
+You can set up an Orka VM using the Orka [CLI][cli] or [REST API][api]. For more information, see the Orka [quick start guide][quick-start].
 
 ## Set up a GitLab Runner
 
 To set up a GitLab Runner, you need to:  
 
 1. Install the Runner. You can install a GitLab Runner one of three ways: [manually][manual-install], via a [homebrew installation][homebrew-install], or in a Docker [container][docker-install].
-2. [Obtain a token][obtain-token]. The token will be used in **STep 3** to register the newly installed GitLab Runner.
+2. [Obtain a token][obtain-token]. The token will be used in **Step 3** to register the newly installed GitLab Runner.
 3. [Register][register-runner] the Runner. This is the process that binds the Runner to GitLab.  
 **Note**: When asked to enter the executor type, select `shell`.
 
