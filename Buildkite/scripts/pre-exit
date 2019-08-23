@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -eo pipefail
+
+token=$(curl -sd '{"email":'\"$ORKA_USER\"', "password":'\"$ORKA_PASSWORD\"'}' -H "Content-Type: application/json" -X POST $ORKA_ENDPOINT/token | jq -r '.token')
+
+CONNECTION_INFO_FILE=/tmp/$BUILDKITE_JOB_ID-connection-info
+cleanup_info=$(<$CONNECTION_INFO_FILE)
+IFS=';' read -ra info <<< "$cleanup_info"
+vm_id=${info[0]}
+node=${info[1]}
+
+curl -sd '{"orka_vm_name":'\"$vm_id\"', "orka_node_name":'\"$node\"'}' -H "Content-Type: application/json" -H "Authorization: Bearer $token" -X DELETE $ORKA_ENDPOINT/resources/vm/delete
