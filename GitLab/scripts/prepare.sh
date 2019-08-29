@@ -7,15 +7,13 @@ set -eo pipefail
 
 token=$(curl -sd '{"email":'\"$CUSTOM_ENV_ORKA_USER\"', "password":'\"$CUSTOM_ENV_ORKA_PASSWORD\"'}' -H "Content-Type: application/json" -X POST $CUSTOM_ENV_ORKA_ENDPOINT/token | jq -r '.token')
 
-vm=$(curl -s -H "Content-Type: application/json" -H "Authorization: Bearer $token" $CUSTOM_ENV_ORKA_ENDPOINT/resources/vm/status/$CUSTOM_ENV_ORKA_VM_NAME)
+vm_info=$(curl -sd '{"orka_vm_name":'\"$CUSTOM_ENV_ORKA_VM_NAME\"'}' -H "Content-Type: application/json" -H "Authorization: Bearer $token" -X POST $CUSTOM_ENV_ORKA_ENDPOINT/resources/vm/deploy)
 
-required_cpu=$(echo $vm | jq '.virtual_machine_resources[0].cpu')
-if [ "$required_cpu" == "null" ]; then
-    required_cpu=$(echo $vm | jq '.virtual_machine_resources[0].status[0].cpu')
+errors=$(echo $vm_info | jq -r '.errors[]?.message')
+if [ "$errors" ]; then
+    echo "VM deploy failed with: $errors"
+    exit "$SYSTEM_FAILURE_EXIT_CODE"
 fi
-
-node=$(curl -s -H "Content-Type: application/json" -H "Authorization: Bearer $token" $CUSTOM_ENV_ORKA_ENDPOINT/resources/node/list | jq -r '[.nodes[]|select(.available_cpu >= '\"$required_cpu\"')][0].name')
-vm_info=$(curl -sd '{"orka_vm_name":'\"$CUSTOM_ENV_ORKA_VM_NAME\"', "orka_node_name":'\"$node\"'}' -H "Content-Type: application/json" -H "Authorization: Bearer $token" -X POST $CUSTOM_ENV_ORKA_ENDPOINT/resources/vm/deploy)
 
 vm_id=$(echo $vm_info | jq -r '.vm_id')
 echo "$vm_id;$node" > $BUILD_ID
