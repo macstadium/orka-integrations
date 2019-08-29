@@ -12,18 +12,16 @@ echo "~~~ Deploying ephemeral agent"
 
 token=$(curl -sd '{"email":'\"$ORKA_USER\"', "password":'\"$ORKA_PASSWORD\"'}' -H "Content-Type: application/json" -X POST $ORKA_ENDPOINT/token | jq -r '.token')
 
-vm=$(curl -s -H "Content-Type: application/json" -H "Authorization: Bearer $token" $ORKA_ENDPOINT/resources/vm/status/$ORKA_VM_NAME)
+vm_info=$(curl -sd '{"orka_vm_name":'\"$ORKA_VM_NAME\"'}' -H "Content-Type: application/json" -H "Authorization: Bearer $token" -X POST $ORKA_ENDPOINT/resources/vm/deploy)
 
-required_cpu=$(echo $vm | jq '.virtual_machine_resources[0].cpu')
-if [ "$required_cpu" == "null" ]; then
-    required_cpu=$(echo $vm | jq '.virtual_machine_resources[0].status[0].cpu')
+errors=$(echo $vm_info | jq -r '.errors[]?.message')
+if [ "$errors" ]; then
+    echo "VM deploy failed with: $errors"
+    exit -1
 fi
 
-node=$(curl -s -H "Content-Type: application/json" -H "Authorization: Bearer $token" $ORKA_ENDPOINT/resources/node/list | jq -r '[.nodes[]|select(.available_cpu >= '\"$required_cpu\"')][0].name')
-vm_info=$(curl -sd '{"orka_vm_name":'\"$ORKA_VM_NAME\"', "orka_node_name":'\"$node\"'}' -H "Content-Type: application/json" -H "Authorization: Bearer $token" -X POST $ORKA_ENDPOINT/resources/vm/deploy)
-
 vm_id=$(echo $vm_info | jq -r '.vm_id')
-echo "$vm_id;$node" > $CONNECTION_INFO_FILE
+echo "$vm_id" > $CONNECTION_INFO_FILE
 
 vm_ip=$(echo $vm_info | jq -r '.ip')
 vm_ssh_port=$(echo $vm_info | jq -r '.ssh_port')
@@ -36,7 +34,7 @@ for i in $(seq 1 30); do
 
     if [ "$i" == "30" ]; then
         echo 'Waited 30 seconds for sshd to start, exiting...'
-        exit "$SYSTEM_FAILURE_EXIT_CODE"
+        exit -1
     fi
 
     sleep 1s
