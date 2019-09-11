@@ -48,17 +48,20 @@ You can create an Orka VM config using the Orka [CLI][cli] or [REST API][api]. F
 
 ## Set up the Buildkite wrapper agent
 
-1. Install and configure a Buildkite agent on a machine that has network visibility to your Orka environment. For more information about how to install and configure a Buildkite agent, see the [instructions][agent-instructions] provided by Buildkite.
-2. Copy the provided scripts to the agent machine: [base.sh](scripts/base.sh), [bootstrap.sh](scripts/bootstrap.sh), [run.sh](scripts/run.sh). 
-**Note**: All scripts should be in the same directory. For example, you can add them to `/usr/local/var/buildkite-agent/`. Overwrite the existing `bootstrap.sh` file if asked.
-3. Make the scripts executable by running `chmod +x path_to_script` in the command line.
-4. Copy the provided [pre-exit hook](scripts/pre-exit) to the agent machine. You should add it to the agent hooks directory. It can be found in the `buildkite-agent.cfg` file under the `hooks-path` property. The location of the `buildkite-agent.cfg` varies depending on your OS. For more information, see your [platform's installation instructions][agent-instructions].
-5. Make the hook executable by running `chmod +x path_to_hook` in the command line.
-6. Verify [jq][jq] is installed. For more information, see [jq][jq] page.
-7. Verify that the machine has network visibility to the Orka environment. If the machine is part of the Orka environment, skip this step. You can use any VPN client to connect to the Orka environment. For more information, see your Orka [IP Plan][ip-plan].
-8. Verify that the private SSH key for connecting to the ephemeral agent is present on the wrapper machine and added to the ssh-agent. This key was created earlier during the Orka base image setup.
-9. Verify that the private SSH keys for the code repositories used by the build job are present on the wrapper machine and added to the ssh-agent.  
-**Note** For more information about using multiple SSH keys, see [here][multiple-ssh-keys].
+The recommended way to set up a wrapper agent is to use the provided [Dockerfile](Dockerfile).  
+
+On the machine where you want to run the wrapper agent container:  
+
+1. Navigate to the [Dockerfile](Dockerfile) directory.
+2. Build a Docker image by running `docker build . -t orka-buildkite`.
+**Note**: By default the [Dockerfile](Dockerfile) uses the latest Buildkite docker image. If you want to specify another version, use the `BASE_VERSION` build argument: `docker build . -t orka-buildkite --build-args BASE_VERSION=3`.
+3. Run a container using the docker image you built and pass your [Buildkite token][agent-token] as a variable.
+Verify that the private SSH key for connecting to the ephemeral agent is mounted in the `buildkite-secrets` folder on the container. This key was created earlier during the Orka base image setup.  
+Verify that the private SSH keys for the code repositories used by the build job are mounted in the `buildkite-secrets` folder on the container.  
+The above is done by running `docker run -v {folder-containing-all-ssh-keys}:/buildkite-secrets -e BUILDKITE_AGENT_TOKEN="{your-token}" orka-buildkite`.
+4. Verify that the container has network visibility to the Orka environment. If the machine, running the container, is part of the Orka environment, skip this step. You can use any VPN client to connect to the Orka environment. For more information, see your Orka [IP Plan][ip-plan].
+
+**Note** If you want to set up the wrapper agent manually, see [here](wrapper-agent-manual-setup.md).
 
 ## Buildkite environment variables
 
@@ -76,17 +79,23 @@ Once the setup of the Buildkite agent is finished, you can run your CI/CD pipeli
 
 ## Connectivity
 
-The communication between the Buildkite agent and the Buildkite server is instantiated from the agent.
+### Ephemeral agent <-> Buildkite server
+
+The communication between an ephemeral Buildkite agent and the Buildkite server is instantiated from the agent.  
 
 This means your Orka environment must have visibility to the Buildkite server.
 
 Visibility from the Buildkite server to the Orka environment is not required. 
 
+### Wrapper agent <-> Orka environment
+
+The Orka environment is behind a firewall.  
+
+This means your wrapper agent must have visibility to the Orka environment. You can use any VPN client to connect to the Orka environment. For more information, see your Orka [IP Plan][ip-plan].
+
 ## Advanced: Additional Buildkite environment variables
 
-By default the wrapper agent and the ephemeral agent share the same Buildkite specific environment variables.  
-This means that the wrapper agent and the ephemeral agent will have the same `hook-path` for example.
-If you wish to use different environment variables on the ephemeral agent you can set the following optional environment variables:
+The ephemeral agent accepts the following optional environment variables:
 
 * `BUILDKITE_AGENT_ACCESS_TOKEN_SUBAGENT`
 * `BUILDKITE_BUILD_PATH_SUBAGENT`
@@ -109,11 +118,10 @@ For more information about Buildkite environment variables, see [here][env-varia
 [cli]: https://orkadocs.macstadium.com/docs/example-cli-workflows
 [api]: https://documenter.getpostman.com/view/6574930/S1ETRGzt?version=latest
 [quick-start]: https://orkadocs.macstadium.com/docs/quick-start
-[agent-instructions]: https://buildkite.com/docs/agent/v3/installation
 [pipeline]: https://buildkite.com/docs/pipelines
 [jq]: https://stedolan.github.io/jq/
 [env-variables]: https://buildkite.com/docs/pipelines/environment-variables
 [ip-plan]: https://orkadocs.macstadium.com/docs/orka-glossary#section-ip-plan
 [bootstrap]: https://buildkite.com/docs/agent/v3/cli-bootstrap
 [homebrew]: https://brew.sh/
-[multiple-ssh-keys]: https://buildkite.com/docs/agent/v3/ssh-keys#using-multiple-keys-with-ssh-agent
+[agent-token]: https://buildkite.com/docs/agent/v3/tokens

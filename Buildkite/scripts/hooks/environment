@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -eo pipefail
+
+eval "$(ssh-agent -s)"
+
+for private_key in /buildkite-secrets/*; do
+    if grep -q PRIVATE "$private_key"; then
+        ssh-add "$private_key"
+    fi
+done
