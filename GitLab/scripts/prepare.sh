@@ -16,7 +16,7 @@ if [ "$errors" ]; then
 fi
 
 vm_id=$(echo $vm_info | jq -r '.vm_id')
-echo "$vm_id;$node" > $BUILD_ID
+echo "$vm_id" > $BUILD_ID
 
 vm_ip=$(echo $vm_info | jq -r '.ip')
 vm_ssh_port=$(echo $vm_info | jq -r '.ssh_port')

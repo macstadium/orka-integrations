@@ -41,24 +41,21 @@ You can create an Orka VM config using the Orka [CLI][cli] or [REST API][api]. F
 
 ## Set up a GitLab Runner
 
-To set up a GitLab Runner, you need to:  
+The recommended wey to set up a GitLab Runner is to use the provided [Dockerfile](Dockerfile).
 
-1. Install the Runner. You can install a GitLab Runner one of three ways: [manually][manual-install], via a [homebrew installation][homebrew-install], or in a Docker [container][docker-install].
-2. [Obtain a token][obtain-token]. The token will be used in **Step 3** to register the newly installed GitLab Runner.
-3. [Register][register-runner] the Runner. This is the process that binds the Runner to GitLab.  
-**Note**: When asked to enter the executor type, select `custom`.
-4. Copy the provided scripts to the Runner machine: [base.sh](scripts/base.sh), [prepare.sh](scripts/prepare.sh), [run.sh](scripts/run.sh), [cleanup.sh](scripts/cleanup.sh).  
-**Note**: All scripts should be in the same directory. For example you can add them to `/var/custom-runner`.
-5. Verify the scripts can be executed by running `chmod +x path_to_script` in the command line.
-6. Update the Runner config file:
-    * Verify the `builds_dir` and `cache_dir` settings are present.  
-    **Note**: Both the `builds_dir` and `cache_dir` paths must be present on the Orka VM, which will execute the build.
-    * Verify the `[runners.custom]` section is available and the `prepare_exec`, `run_exec` and `cleanup_exec` are set to point to the `prepare.sh`, `run.sh` and `cleanup.sh` scripts. 
+To do that:
 
-    **Note**: A template config file is available [here](template-config.md).  
-    For information about the location of the file and its contents, see the GitLab Runner [configuration page][config-page] and the Custom executor [configuration page][custom-config-page].
-7. Verify [jq][jq] is installed. For more information, see [jq][jq] page.
-8. Verify that the private SSH key for connecting to the ephemeral VM is present on the Runner machine under this path `/root/.ssh/id_rsa`. This key was created earlier during the Orka base image setup.
+1. Navigate to the [Dockerfile](Dockerfile) directory.
+2. Build a Docker image by running `docker build . -t orka-gitlab`.
+**Note**: The Dockerfile supports the Alpine GitLab Runner docker images. By default the [Dockerfile](Dockerfile) uses the latest GitLab Alpine docker image. If you want to specify another version, use the `BASE_VERSION` build argument: `docker build . -t orka-gitlab --build-args BASE_VERSION=alpine-bleeding`.  
+3. Run a container using the Docker image you built.
+Verify that the private SSH key for connecting to the ephemeral agent is mounted as the `/root/.ssh/id_rsa` file on the container. This key was created earlier during the Orka base image setup.  
+4. [Obtain a token][obtain-token]. The token will be used in **Step 5** to register the newly installed GitLab Runner.
+5. [Register][register-runner] the Runner. This is the process that binds the Runner to GitLab. To register the Runner, run the following command inside the container:  
+`gitlab-runner register --non-interactive --executor "custom" --url "{gitlab-server-url}" --registration-token "{gitlab-registration-token}" --description="orka-runner"`. Replace the placeholders with the correct values.
+6. Verify that the container has network visibility to the Orka environment. If the machine, running the container, is part of the Orka environment, skip this step. You can use any VPN client to connect to the Orka environment. For more information, see your Orka [IP Plan][ip-plan].
+
+**Note** If you want to set up the Runner manually, see [here](runner-manual-setup.md).
 
 ## GitLab CI/CD environment variables
 
@@ -90,9 +87,6 @@ Visibility from the GitLab server to the Orka environment is not required.
 [api]: https://documenter.getpostman.com/view/6574930/S1ETRGzt?version=latest
 [quick-start]: https://orkadocs.macstadium.com/docs/quick-start
 [runner]: https://docs.gitlab.com/runner/
-[manual-install]: https://docs.gitlab.com/runner/install/osx.html#manual-installation-official
-[homebrew-install]: https://docs.gitlab.com/runner/install/osx.html#homebrew-installation-alternative
-[docker-install]: https://docs.gitlab.com/runner/install/docker.html
 [obtain-token]: https://docs.gitlab.com/ee/ci/runners/#registering-a-specific-runner-with-a-project-registration-token
 [register-runner]: https://docs.gitlab.com/runner/register/index.html
 [custom-config-page]: https://docs.gitlab.com/runner/executors/custom.html
