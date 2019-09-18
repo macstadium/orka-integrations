@@ -6,7 +6,7 @@ The ephemeral agent is used to run a single Buildkite job in a Buildkite [pipeli
 The agent is created before the job execution and deleted once the job completes.
 
 This is achieved by overwriting the Buildkite agent [bootstrap][bootstrap] command of the registered agent.  
-This way we create a wrapper agent that instead of executing the Buildkite job locally, spins up an Orka VM and delegates the job to that VM.
+This way we create a proxy agent that instead of executing the Buildkite job locally, spins up an Orka VM and delegates the job to that VM.
 
 ## Requirements
 
@@ -17,12 +17,12 @@ This way we create a wrapper agent that instead of executing the Buildkite job l
 ## Setup overview
 
 1. Set up an Orka VM base image. The image must have SSH enabled and contain an installed Buildkite agent.
-2. Set up an Orka VM config using the base image from **Step 1**. The Orka VM config is the container template that the wrapper agent will use to spin up the ephemeral agent.
-3. Set up the wrapper agent.
+2. Set up an Orka VM config using the base image from **Step 1**. The Orka VM config is the container template that the proxy agent will use to spin up the ephemeral agent.
+3. Set up the proxy agent.
 
 ## Set up an Orka VM base image
 
-The Orka VM used as an ephemeral agent needs to have the Buildkite agent installed locally. This is needed to allow the delegation of Buildkite jobs from the wrapper agent.
+The Orka VM used as an ephemeral agent needs to have the Buildkite agent installed locally. This is needed to allow the delegation of Buildkite jobs from the proxy agent.
 
 If your Orka environment does not provide a base image pre-configured with a Buildkite agent, you need to create one yourself.
 
@@ -37,20 +37,20 @@ You will later use this base image to create a VM config (a container template) 
     brew tap buildkite/buildkite
     brew install buildkite-agent
     ```
-5. Verify that SSH login with a private key is enabled. SSH login is used by the wrapper agent to communicate with the ephemeral agent.
+5. Verify that SSH login with a private key is enabled. SSH login is used by the proxy agent to communicate with the ephemeral agent.
 6. On your local machine, run `orka image save`. The command saves the base image in Orka.
 
 ## Set up an Orka VM config for the ephemeral agents
 
-To allow the wrapper agent to spin up ephemeral agents in Orka, create an Orka VM config (a container template) that uses the Buildkite-enabled base image you just created.  
+To allow the proxy agent to spin up ephemeral agents in Orka, create an Orka VM config (a container template) that uses the Buildkite-enabled base image you just created.  
 
 You can create an Orka VM config using the Orka [CLI][cli] or [REST API][api]. For more information, see the Orka [quick start guide][quick-start].
 
-## Set up the Buildkite wrapper agent
+## Set up the Buildkite proxy agent
 
-The recommended way to set up a wrapper agent is to use the provided [Dockerfile](Dockerfile).  
+The recommended way to set up a proxy agent is to use the provided [Dockerfile](Dockerfile).  
 
-On the machine where you want to run the wrapper agent container:  
+On the machine where you want to run the proxy agent container:  
 
 1. Navigate to the [Dockerfile](Dockerfile) directory.
 2. Build a Docker image by running `docker build . -t orka-buildkite`.
@@ -61,7 +61,7 @@ Verify that the private SSH keys for the code repositories used by the build job
 The above is done by running `docker run -v {folder-containing-all-ssh-keys}:/buildkite-secrets -e BUILDKITE_AGENT_TOKEN="{your-token}" orka-buildkite`.
 4. Verify that the container has network visibility to the Orka environment. If the machine, running the container, is part of the Orka environment, skip this step. You can use any VPN client to connect to the Orka environment. For more information, see your Orka [IP Plan][ip-plan].
 
-**Note** If you want to set up the wrapper agent manually, see [here](wrapper-agent-manual-setup.md).
+**Note** If you want to set up the proxy agent manually, see [here](proxy-agent-manual-setup.md).
 
 ## Buildkite environment variables
 
@@ -87,11 +87,11 @@ This means your Orka environment must have visibility to the Buildkite server.
 
 Visibility from the Buildkite server to the Orka environment is not required. 
 
-### Wrapper agent <-> Orka environment
+### Proxy agent <-> Orka environment
 
 The Orka environment is behind a firewall.  
 
-This means your wrapper agent must have visibility to the Orka environment. You can use any VPN client to connect to the Orka environment. For more information, see your Orka [IP Plan][ip-plan].
+This means your proxy agent must have visibility to the Orka environment. You can use any VPN client to connect to the Orka environment. For more information, see your Orka [IP Plan][ip-plan].
 
 ## Advanced: Additional Buildkite environment variables
 
