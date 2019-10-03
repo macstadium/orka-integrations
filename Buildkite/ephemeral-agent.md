@@ -11,8 +11,7 @@ This way we create a proxy agent that instead of executing the Buildkite job loc
 ## Requirements
 
 - [Orka][orka] VM config
-- Buildkite [agent][agent]
-- [jq][jq] - command-line JSON processor used by the provided scripts
+- [Docker][docker]
 
 ## Setup overview
 
@@ -119,9 +118,9 @@ For more information about Buildkite environment variables, see [here][env-varia
 [api]: https://documenter.getpostman.com/view/6574930/S1ETRGzt?version=latest
 [quick-start]: https://orkadocs.macstadium.com/docs/quick-start
 [pipeline]: https://buildkite.com/docs/pipelines
-[jq]: https://stedolan.github.io/jq/
 [env-variables]: https://buildkite.com/docs/pipelines/environment-variables
 [ip-plan]: https://orkadocs.macstadium.com/docs/orka-glossary#section-ip-plan
 [bootstrap]: https://buildkite.com/docs/agent/v3/cli-bootstrap
 [homebrew]: https://brew.sh/
 [agent-token]: https://buildkite.com/docs/agent/v3/tokens
+[docker]: https://www.docker.com/

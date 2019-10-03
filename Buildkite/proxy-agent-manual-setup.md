@@ -2,6 +2,13 @@
 
 This guide explains how to set up a Buildkite proxy agent manually. If you want to set it up automatically, using a Docker container, see [here](ephemeral-agent.md#set-up-the-buildkite-proxy-agent).
 
+## Requirements
+
+- Buildkite [agent][agent]
+- [jq][jq] - command-line JSON processor used by the provided scripts
+
+## Set up the Buildkite proxy agent
+
 1. Install and configure a Buildkite agent on a machine that has network visibility to your Orka environment. For more information about how to install and configure a Buildkite agent, see the [instructions][agent-instructions] provided by Buildkite.
 2. Copy the provided scripts to the agent machine: [base.sh](scripts/base.sh), [bootstrap.sh](scripts/bootstrap.sh), [run.sh](scripts/run.sh). 
 **Note**: All scripts should be in the same directory. For example, you can add them to `/usr/local/var/buildkite-agent/`. Overwrite the existing `bootstrap.sh` file if asked.
@@ -18,3 +25,4 @@ This guide explains how to set up a Buildkite proxy agent manually. If you want 
 [jq]: https://stedolan.github.io/jq/
 [multiple-ssh-keys]: https://buildkite.com/docs/agent/v3/ssh-keys#using-multiple-keys-with-ssh-agent
 [ip-plan]: https://orkadocs.macstadium.com/docs/orka-glossary#section-ip-plan
+[agent]: https://buildkite.com/docs/agent/v3
