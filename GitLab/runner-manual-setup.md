@@ -2,6 +2,13 @@
 
 This guide explains how to set up a GitLab Runner manually. If you want to set it up automatically, using a Docker container, see [here](custom-executor.md#set-up-a-gitlab-runner).
 
+## Requirements
+
+- GitLab [Runner][runner]
+- [jq][jq] - command-line JSON processor used by the provided scripts
+
+## Set up a GitLab Runner
+
 To set up a GitLab Runner manually, you need to:  
 
 1. Install the Runner. You can install a GitLab Runner one of three ways: [manually][manual-install], via a [homebrew installation][homebrew-install], or in a Docker [container][docker-install].
@@ -28,3 +35,4 @@ To set up a GitLab Runner manually, you need to:
 [register-runner]: https://docs.gitlab.com/runner/register/index.html
 [custom-config-page]: https://docs.gitlab.com/runner/executors/custom.html
 [jq]: https://stedolan.github.io/jq/
+[runner]: https://docs.gitlab.com/runner/

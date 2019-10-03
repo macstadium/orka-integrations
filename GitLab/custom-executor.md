@@ -9,8 +9,8 @@ The Custom executor spins up ephemeral Mac machines, which will execute the CI/C
 
 ## Requirements
 
-- GitLab [Runner][runner]
-- [jq][jq] - command-line JSON processor used by the provided scripts
+- [Orka][orka] VM config
+- [Docker][docker]
 
 ## Setup overview
 
@@ -86,10 +86,10 @@ Visibility from the GitLab server to the Orka environment is not required.
 [cli]: https://orkadocs.macstadium.com/docs/example-cli-workflows
 [api]: https://documenter.getpostman.com/view/6574930/S1ETRGzt?version=latest
 [quick-start]: https://orkadocs.macstadium.com/docs/quick-start
-[runner]: https://docs.gitlab.com/runner/
+[docker]: https://www.docker.com/
 [obtain-token]: https://docs.gitlab.com/ee/ci/runners/#registering-a-specific-runner-with-a-project-registration-token
 [register-runner]: https://docs.gitlab.com/runner/register/index.html
 [custom-config-page]: https://docs.gitlab.com/runner/executors/custom.html
-[jq]: https://stedolan.github.io/jq/
 [config-page]: https://docs.gitlab.com/runner/configuration/advanced-configuration.html
 [env-variables]: https://docs.gitlab.com/ee/ci/variables/
+[ip-plan]: https://orkadocs.macstadium.com/docs/orka-glossary#section-ip-plan
