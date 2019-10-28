@@ -5,9 +5,9 @@ source ${currentDir}/base.sh
 
 set -eo pipefail
 
-token=$(curl -sd '{"email":'\"$CUSTOM_ENV_ORKA_USER\"', "password":'\"$CUSTOM_ENV_ORKA_PASSWORD\"'}' -H "Content-Type: application/json" -X POST $CUSTOM_ENV_ORKA_ENDPOINT/token | jq -r '.token')
+token=$(curl -sd '{"email":'\"$ORKA_USER\"', "password":'\"$ORKA_PASSWORD\"'}' -H "Content-Type: application/json" -X POST $ORKA_ENDPOINT/token | jq -r '.token')
 
-vm_info=$(curl -sd '{"orka_vm_name":'\"$CUSTOM_ENV_ORKA_VM_NAME\"'}' -H "Content-Type: application/json" -H "Authorization: Bearer $token" -X POST $CUSTOM_ENV_ORKA_ENDPOINT/resources/vm/deploy)
+vm_info=$(curl -sd '{"orka_vm_name":'\"$ORKA_VM_NAME\"'}' -H "Content-Type: application/json" -H "Authorization: Bearer $token" -X POST $ORKA_ENDPOINT/resources/vm/deploy)
 
 errors=$(echo $vm_info | jq -r '.errors[]?.message')
 if [ "$errors" ]; then
@@ -24,7 +24,7 @@ echo "$vm_ip;$vm_ssh_port" > $CONNECTION_INFO_ID
 
 echo "Waiting for sshd to be available"
 for i in $(seq 1 30); do
-    if ssh -i /root/.ssh/id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $CUSTOM_ENV_ORKA_VM_USER@$vm_ip -p $vm_ssh_port "echo ok" >/dev/null 2>/dev/null; then
+    if ssh -i /root/.ssh/id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $ORKA_VM_USER@$vm_ip -p $vm_ssh_port "echo ok" >/dev/null 2>/dev/null; then
         break
     fi
 
