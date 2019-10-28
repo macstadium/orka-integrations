@@ -63,7 +63,7 @@ The provided scripts expect the following environment variables to be set:
 
 * `ORKA_USER` - User used to connect to the Orka environment. Created by running `orka user create`
 * `ORKA_PASSWORD` - Password used to connect to the Orka environment. Created by running `orka user create`
-* `ORKA_ENDPOINT` - The Orka endpoint. By default it is `http://10.10.10.100`
+* `ORKA_ENDPOINT` - The Orka endpoint. Usually, it is `http://10.10.10.100`
 * `ORKA_VM_NAME` - The name of the VM to be deployed
 * `ORKA_VM_USER` - User used to SSH to the VM
 
