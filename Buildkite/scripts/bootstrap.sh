@@ -56,4 +56,4 @@ env_vars+=(
 
 echo "~~~ Delegating job to the ephemeral agent"
 
-ssh -A -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $ORKA_VM_USER@$vm_ip -p $vm_ssh_port env ${env_vars[@]} /bin/bash -s < ${currentDir}/run.sh
+ssh -A -o ServerAliveInterval=60 -o ServerAliveCountMax=60 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $ORKA_VM_USER@$vm_ip -p $vm_ssh_port env ${env_vars[@]} /bin/bash -s < ${currentDir}/run.sh
