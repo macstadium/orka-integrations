@@ -8,6 +8,10 @@ This repository contains integrations between [Orka by MacStadium][orka] and dif
 
 MacStadium provides a Jenkins plugin that integrates with Orka. It can be found [here][jenkins-plugin].
 
+### GitHub
+
+The integration guide for GitHub can be found [here](GitHub/README.md).
+
 ### GitLab
 
 The integration guide for GitLab can be found [here](GitLab/README.md).
