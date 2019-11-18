@@ -9,12 +9,12 @@ orka_password=${ORKA_PASSWORD:-}
 orka_endpoint=${ORKA_ENDPOINT:-}
 orka_vm_name=${ORKA_VM_NAME:-}
 orka_vm_user=${ORKA_VM_USER:-}
-agent_count=${AGENT_COUNT:-1}
+runner_count=${RUNNER_COUNT:-1}
 ssh_key_location=${SSH_KEY_LOCATION:-$HOME/.ssh/id_rsa}
 github_token=${GITHUB_TOKEN:-}
 repository=${REPOSITORY:-}
 version=${RUNNER_VERSION:-"2.160.2"}
-type=${RUNNER_RUN_TYPE:-"command"}
+type=${RUNNER_RUN_TYPE:-"service"}
 
 while [[ "$#" -gt 0 ]]
 do
@@ -34,8 +34,8 @@ case $1 in
     -vu|--orka_vm_user)
     orka_vm_user=$2
     ;;
-    -c|--agent_count)
-    agent_count=$2
+    -c|--runner_count)
+    runner_count=$2
     ;;
     -s|--ssh_key_location)
     ssh_key_location=$2
@@ -56,7 +56,7 @@ esac
 shift
 done
 
-for i in $(seq 1 $agent_count); do
+for i in $(seq 1 $runner_count); do
     echo "Booting VM #$i"
     token=$(curl -sd '{"email":'\"$orka_user\"', "password":'\"$orka_password\"'}' -H "Content-Type: application/json" -X POST $orka_endpoint/token | jq -r '.token')
     vm_info=$(curl -sd '{"orka_vm_name":'\"$orka_vm_name\"'}' -H "Content-Type: application/json" -H "Authorization: Bearer $token" -X POST $orka_endpoint/resources/vm/deploy)

@@ -23,7 +23,7 @@ You will later use this base image to create a VM config (a container template) 
 1. Set up a new Orka VM. You can set up an Orka VM using the Orka [CLI][cli] or [REST API][api]. For more information, see the Orka [quick start guide][quick-start].  
 2. Connect to the Orka VM using VNC.  
 **Note**: The VM IP and VNC ports are displayed once the VM is deployed in Orka.  
-3. Verify that SSH login with a private key is enabled. SSH login is used by the proxy agent to set up the runner.
+3. Verify that SSH login with a private key is enabled. SSH login is used to set up the runner.
 4. (Optional) Enable automatic login during startup. This enables automatic start of the runner when machine starts. To do that, follow the [instructions][auto-login].
 5. On your local machine, run `orka image save`. The command saves the base image in Orka.
 
@@ -49,7 +49,7 @@ To set up multiple GitHub Actions runner, you need to:
         * `-e` or `--orka_endpoint` - The Orka endpoint. Usually, it is `http://10.10.10.100`.
         * `-v` or `--orka_vm_name` - The name of the VM to be deployed. This should match the VM config created [earlier](#set-up-an-orka-vm-config-for-the-runner).
         * `-vu` or `--orka_vm_user` - User used to SSH to the VM.
-        * `-c` or `--agent_count` - The number of runners to be created. By default it is `1`.
+        * `-c` or `--runner_count` - The number of runners to be created. By default it is `1`.
         * `-s` or `--ssh_key_location` - The location on your local machine of the SSH key used to connect to the Orka VMs. By default it is `~/.ssh/id_rsa`.
         * `-t` or `--github_token` - The GitHub token you obtained in **Step 1**.
         * `-r` or `--repository` - The URL of the GitHub repository you want to attach the runner to.
@@ -66,7 +66,7 @@ You can also use environment variables instead of passing arguments to the [setu
 * ORKA_ENDPOINT
 * ORKA_VM_NAME
 * ORKA_VM_USER
-* AGENT_COUNT
+* RUNNER_COUNT
 * SSH_KEY_LOCATION
 * GITHUB_TOKEN
 * REPOSITORY
