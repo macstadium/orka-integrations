@@ -6,7 +6,7 @@ github_token=${GITHUB_TOKEN:-}
 repository=${REPOSITORY:-}
 runner=${RUNNER_NAME:-$(uuidgen)}
 version=${RUNNER_VERSION:-"2.160.2"}
-type=${RUNNER_RUN_TYPE:-"command"}
+type=${RUNNER_RUN_TYPE:-"service"}
 work_dir=${RUNNER_WORK_DIR:-"_work"}
 deploy_dir=${RUNNER_DEPLOY_DIR:-"$HOME/actions-runner"}
 
