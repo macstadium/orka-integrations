@@ -1,7 +1,8 @@
-# Using a self-hosted GitHub Actions runner
+# Using an Automatically Configured Single Self-Hosted GitHub Actions Runner
 
-This guide explains how to automatically set up a single self-hosted [GitHub Actions][actions] runner in a MacStadium [Orka][orka] environment for your GitHub Actions builds.  
-If you want to set it up multiple runners automatically, see [here](multiple-self-hosted-runners.md).
+This guide explains how to automatically set up a single self-hosted [GitHub Actions][actions] runner in an [Orka by MacStadium][orka] environment for your GitHub Actions builds. The runner persists over time and GitHub Actions uses it every time you need to run a workflow.  
+If you want to set up multiple runners automatically, see [here](multiple-self-hosted-runners.md).
+If you want to set up one runner manually, see [here](self-hosted-runner-manually.md).
 
 ## Requirements
 
@@ -10,7 +11,7 @@ If you want to set it up multiple runners automatically, see [here](multiple-sel
 ## Set up an Orka VM
 
 You can set up an Orka VM using the Orka [CLI][cli] or [REST API][api]. For more information, see the Orka [quick start guide][quick-start].  
-*Optional:* If you want to enable automatic start of the runner when the machine starts, you need to enable automatic login during startup. To do that, follow the [instructions][auto-login].
+*Optional:* If you want to enable automatic start of the runner when the VM starts, you need to enable automatic login during startup. To do that, follow these [instructions][auto-login].
 
 ## Set up a self-hosted GitHub Actions runner
 
@@ -19,33 +20,33 @@ To set up a GitHub Actions runner, you need to:
 1. Obtain a GitHub token. 
     * Follow steps **1** to **5** in the [instructions][add-runner] provided by GitHub.
     * You can find your token in the `Configure` section right after the `--token` flag.
-2. Connect to the Orka VM you want to configure as a GitHub Actions runner.
-3. Download the [setup-runner.sh](scripts/setup-runner.sh) file.
-4. Run the script by providing the following arguments:
-    * `-t` or `--github_token` - The GitHub token you obtained in **Step 1**.
-    * `-r` or `--repository` - The URL of the GitHub repository you want to attach the runner to.
-    * `-n` or `--runner_name` - The name of the runner. By default it is a custom GUID.
-    * `-v` or `--runner_version` - The version of the runner. By default it is `2.160.2`.
-    * `-tp` or `--runner_run_type` - One of `command` and `service`. Choose `service` if you want the runner to start automatically when the VM starts. It is `command` by default.  
-    **Note** If you choose `service` you need to enable automatic login during startup. To do that, follow the [instructions][auto-login].
-    * `-w` or `--runner_work_dir` - Runner working directory. By default it is `_work` under the runner installation directory.
-    * `-d` or `--runner_deploy_dir` - Runner installation directory. By default it is `actions-runner` under the user home directory.
+2. Connect to your Orka VM via SSH or VNC.
+3. On the VM, download the [setup-runner.sh](scripts/setup-runner.sh) file.
+4. Run the script and provide the following arguments:
+    * `-t` or `--github_token` - (Required) The GitHub token you obtained in **Step 1**.
+    * `-r` or `--repository` - (Required) The URL of the GitHub repository you want to attach the runner to.
+    * `-n` or `--runner_name` - (Optional) A name for the runner. If not specified, defaults to a custom GUID.
+    * `-v` or `--runner_version` - (Optional) The version of the runner. If not specified, defaults to `2.160.2`.
+    * `-tp` or `--runner_run_type` - (Optional) One of `command` or `service`. Choose `service` if you want the runner to start automatically when the VM starts. Choose `command` if you want to manually start the runner every time the VM starts. If not specified, defaults to `service`.  
+    **Note** If you don't specify or you set to `service`, you need to enable automatic login during startup. To do that, follow these [instructions][auto-login].
+    * `-w` or `--runner_work_dir` - (Optional) Runner working directory. If not specified, defaults to `_work` under the runner installation directory.
+    * `-d` or `--runner_deploy_dir` - (Optional) Runner installation directory. If not specified, defaults to `actions-runner` under the user home directory.
 
 ## Environment variables
 
 You can also use environment variables instead of passing arguments to the [setup-runner.sh](scripts/setup-runner.sh) script. These are the available variables:
 
-* GITHUB_TOKEN
-* REPOSITORY
-* RUNNER_NAME
-* RUNNER_VERSION
-* RUNNER_RUN_TYPE
-* RUNNER_WORK_DIR
-* RUNNER_DEPLOY_DIR
+* `GITHUB_TOKEN`
+* `REPOSITORY`
+* `RUNNER_NAME`
+* `RUNNER_VERSION`
+* `RUNNER_RUN_TYPE`
+* `RUNNER_WORK_DIR`
+* `RUNNER_DEPLOY_DIR`
 
 ## Using the self-hosted GitHub Actions runner
 
-Once the setup of the GitHub runner is finished, you can run your GitHub Actions workflows in Orka. For more information, see [here][using-runner].
+Once the setup of the GitHub runner is finished and as long as the respective Orka VM is up and running, you can run your GitHub Actions workflows in Orka. For more information, see [here][using-runner].
 
 ## Checking the status of the self-hosted GitHub Actions runner
 
