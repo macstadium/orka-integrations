@@ -47,7 +47,7 @@ To set up multiple GitHub Actions runner, you need to:
     * Run the [multiple-runners.sh](scripts/multiple-runners.sh) script and provide the following arguments
         * `-u` or `--orka_user` - (Required) User used to authenticate with the Orka environment. Created by running `orka user create`.
         * `-p` or `--orka_password` - (Required) Password used to authenticate with the Orka environment. Created by running `orka user create`.
-        * `-e` or `--orka_endpoint` - (Required) The Orka endpoint. `http://10.10.10.100` OR `http://10.221.188.100`.
+        * `-e` or `--orka_endpoint` - (Required) The Orka endpoint. Usually, `http://10.10.10.100` OR `http://10.221.188.100`.
         * `-v` or `--orka_vm_name` - (Required) The name of the VM config to be deployed. This should match the VM config created [earlier](#set-up-an-orka-vm-config-for-the-runner).
         * `-vu` or `--orka_vm_user` - (Required) User used to SSH to the VM.
         * `-c` or `--runner_count` - (Optional) The number of runners to be created. If not specified, defaults to `1`.
