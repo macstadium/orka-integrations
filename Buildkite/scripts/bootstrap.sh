@@ -26,6 +26,16 @@ echo "$vm_id" > $CONNECTION_INFO_FILE
 vm_ip=$(echo $vm_info | jq -r '.ip')
 vm_ssh_port=$(echo $vm_info | jq -r '.ssh_port')
 
+if ! valid_ip $vm_ip; then
+    echo "Invalid ip: $vm_ip"
+    exit -1
+fi
+
+if [ -z "$vm_ssh_port" ]; then
+    echo "Invalid port: $vm_ssh_port"
+    exit -1
+fi
+
 echo "Waiting for sshd to be available"
 for i in $(seq 1 30); do
     if ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $ORKA_VM_USER@$vm_ip -p $vm_ssh_port "echo ok"  >/dev/null 2>/dev/null; then

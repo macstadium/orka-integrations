@@ -1,8 +1,9 @@
 #!/bin/bash
 
-set -euo pipefail
-
 currentDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+source ${currentDir}/base.sh
+
+set -euo pipefail
 
 orka_user=${ORKA_USER:-}
 orka_password=${ORKA_PASSWORD:-}
@@ -73,6 +74,16 @@ for i in $(seq 1 $runner_count); do
 
     vm_ip=$(echo $vm_info | jq -r '.ip')
     vm_ssh_port=$(echo $vm_info | jq -r '.ssh_port')
+
+    if ! valid_ip $vm_ip; then
+        echo "Invalid ip: $vm_ip"
+        exit -1
+    fi
+
+    if [ -z "$vm_ssh_port" ]; then
+        echo "Invalid port: $vm_ssh_port"
+        exit -1
+    fi
 
     echo "Waiting for sshd to be available"
     for i in $(seq 1 30); do
