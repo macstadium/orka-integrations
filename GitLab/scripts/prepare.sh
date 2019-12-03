@@ -20,6 +20,17 @@ echo "$vm_id" > $BUILD_ID
 
 vm_ip=$(echo $vm_info | jq -r '.ip')
 vm_ssh_port=$(echo $vm_info | jq -r '.ssh_port')
+
+if ! valid_ip $vm_ip; then
+    echo "Invalid ip: $vm_ip"
+    exit "$SYSTEM_FAILURE_EXIT_CODE"
+fi
+
+if [ -z "$vm_ssh_port" ]; then
+    echo "Invalid port: $vm_ssh_port"
+    exit "$SYSTEM_FAILURE_EXIT_CODE"
+fi
+
 echo "$vm_ip;$vm_ssh_port" > $CONNECTION_INFO_ID
 
 echo "Waiting for sshd to be available"

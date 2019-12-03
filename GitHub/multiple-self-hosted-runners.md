@@ -43,7 +43,7 @@ To set up multiple GitHub Actions runner, you need to:
     * You can find your token in the `Configure` section right after the `--token` flag.
 2. On a machine that has connectivity to your Orka environment:
     * Install [jq][jq] - a command-line JSON processor used by the provided scripts.
-    * Download [multiple-runners.sh](scripts/multiple-runners.sh) and [setup-runner.sh](scripts/setup-runner.sh) files in the same directory.
+    * Download [multiple-runners.sh](scripts/multiple-runners.sh), [setup-runner.sh](scripts/setup-runner.sh) and [base.sh](scripts/base.sh) files in the same directory.
     * Run the [multiple-runners.sh](scripts/multiple-runners.sh) script and provide the following arguments
         * `-u` or `--orka_user` - (Required) User used to authenticate with the Orka environment. Created by running `orka user create`.
         * `-p` or `--orka_password` - (Required) Password used to authenticate with the Orka environment. Created by running `orka user create`.
