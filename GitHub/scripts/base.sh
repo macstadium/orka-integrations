@@ -14,3 +14,9 @@ function valid_ip {
     fi
     return -1
 }
+
+function report_timeout {
+    if [ $? -eq 28 ]; then
+        echo "Curl opertion timed out. Exiting..."
+    fi
+}

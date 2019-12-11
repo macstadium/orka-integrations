@@ -5,10 +5,20 @@ source ${currentDir}/base.sh
 
 set -eo pipefail
 
+trap system_failiure ERR
+
+echo "Cleaning up..."
+
 if [[ -f "$BUILD_ID" ]]; then
-    token=$(curl -sd '{"email":'\"$ORKA_USER\"', "password":'\"$ORKA_PASSWORD\"'}' -H "Content-Type: application/json" -X POST $ORKA_ENDPOINT/token | jq -r '.token')
+    echo "Authenticating with Orka..."
+    
+    token=$(curl -m 60 -sd '{"email":'\"$ORKA_USER\"', "password":'\"$ORKA_PASSWORD\"'}' -H "Content-Type: application/json" -X POST $ORKA_ENDPOINT/token | jq -r '.token')
 
     vm_id=$(<$BUILD_ID)
 
-    curl -sd '{"orka_vm_name":'\"$vm_id\"'}' -H "Content-Type: application/json" -H "Authorization: Bearer $token" -X DELETE $ORKA_ENDPOINT/resources/vm/delete
+    echo "Deleting VM..."
+
+    curl -m 60 -sd '{"orka_vm_name":'\"$vm_id\"'}' -H "Content-Type: application/json" -H "Authorization: Bearer $token" -X DELETE $ORKA_ENDPOINT/resources/vm/delete
+
+    echo "VM deleted."
 fi

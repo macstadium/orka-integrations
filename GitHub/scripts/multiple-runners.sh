@@ -5,6 +5,8 @@ source ${currentDir}/base.sh
 
 set -euo pipefail
 
+trap report_timeout EXIT
+
 orka_user=${ORKA_USER:-}
 orka_password=${ORKA_PASSWORD:-}
 orka_endpoint=${ORKA_ENDPOINT:-}
@@ -59,8 +61,8 @@ done
 
 for i in $(seq 1 $runner_count); do
     echo "Booting VM #$i"
-    token=$(curl -sd '{"email":'\"$orka_user\"', "password":'\"$orka_password\"'}' -H "Content-Type: application/json" -X POST $orka_endpoint/token | jq -r '.token')
-    vm_info=$(curl -sd '{"orka_vm_name":'\"$orka_vm_name\"'}' -H "Content-Type: application/json" -H "Authorization: Bearer $token" -X POST $orka_endpoint/resources/vm/deploy)
+    token=$(curl -m 60 -sd '{"email":'\"$orka_user\"', "password":'\"$orka_password\"'}' -H "Content-Type: application/json" -X POST $orka_endpoint/token | jq -r '.token')
+    vm_info=$(curl -m 60 -sd '{"orka_vm_name":'\"$orka_vm_name\"'}' -H "Content-Type: application/json" -H "Authorization: Bearer $token" -X POST $orka_endpoint/resources/vm/deploy)
 
     errors=$(echo $vm_info | jq -r '.errors[]?.message')
     if [ "$errors" ]; then

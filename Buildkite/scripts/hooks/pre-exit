@@ -5,9 +5,9 @@ set -eo pipefail
 CONNECTION_INFO_FILE=/tmp/$BUILDKITE_JOB_ID-connection-info
 
 if [[ -f "$CONNECTION_INFO_FILE" ]]; then
-    token=$(curl -sd '{"email":'\"$ORKA_USER\"', "password":'\"$ORKA_PASSWORD\"'}' -H "Content-Type: application/json" -X POST $ORKA_ENDPOINT/token | jq -r '.token')
+    token=$(curl -m 60 -sd '{"email":'\"$ORKA_USER\"', "password":'\"$ORKA_PASSWORD\"'}' -H "Content-Type: application/json" -X POST $ORKA_ENDPOINT/token | jq -r '.token')
 
     vm_id=$(<$CONNECTION_INFO_FILE)
 
-    curl -sd '{"orka_vm_name":'\"$vm_id\"'}' -H "Content-Type: application/json" -H "Authorization: Bearer $token" -X DELETE $ORKA_ENDPOINT/resources/vm/delete
+    curl -m 60 -sd '{"orka_vm_name":'\"$vm_id\"'}' -H "Content-Type: application/json" -H "Authorization: Bearer $token" -X DELETE $ORKA_ENDPOINT/resources/vm/delete
 fi
