@@ -20,3 +20,22 @@ function report_timeout {
         echo "Curl opertion timed out. Exiting..."
     fi
 }
+
+function map_ip {
+    local current_ip=${1}
+    local settings_file=${2:-}
+    local result=$current_ip
+    if [[ -f "$settings_file" ]]; then
+        mappings=($(jq -r '.mappings[] | .private_host, .public_host' $settings_file))
+        for ((i = 0; i < ${#mappings[@]}; i+=2)); do
+            if [[ "$current_ip" == "${mappings[$i]}" ]]; then
+                result=${mappings[$((i + 1))]}
+                break
+            fi
+        done
+    fi
+
+    echo $result
+
+    return 0
+}

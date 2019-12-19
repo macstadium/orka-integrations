@@ -9,6 +9,8 @@ ORKA_ENDPOINT=${ORKA_ENDPOINT:-$CUSTOM_ENV_ORKA_ENDPOINT}
 ORKA_VM_NAME=${ORKA_VM_NAME:-$CUSTOM_ENV_ORKA_VM_NAME}
 ORKA_VM_USER=${ORKA_VM_USER:-$CUSTOM_ENV_ORKA_VM_USER}
 
+SETTINGS_FILE='/var/custom-executor/settings.json'
+
 function valid_ip {
     local ip=${1-}
 
@@ -29,4 +31,22 @@ function system_failiure {
         echo "Curl opertion timed out. Exiting..."
     fi
     exit $SYSTEM_FAILURE_EXIT_CODE
+}
+
+function map_ip {
+    local current_ip=${1}
+    local result=$current_ip
+    if [[ -f "$SETTINGS_FILE" ]]; then
+        mappings=($(jq -r '.mappings[] | .private_host, .public_host' $SETTINGS_FILE))
+        for ((i = 0; i < ${#mappings[@]}; i+=2)); do
+            if [[ "$current_ip" == "${mappings[$i]}" ]]; then
+                result=${mappings[$((i + 1))]}
+                break
+            fi
+        done
+    fi
+
+    echo $result
+
+    return 0
 }

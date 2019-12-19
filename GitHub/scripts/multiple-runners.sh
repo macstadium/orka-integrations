@@ -18,6 +18,7 @@ github_token=${GITHUB_TOKEN:-}
 repository=${REPOSITORY:-}
 version=${RUNNER_VERSION:-"2.163.1"}
 type=${RUNNER_RUN_TYPE:-"service"}
+settings_file=${SETTINGS_FILE:-"${currentDir}/settings.json"}
 
 while [[ "$#" -gt 0 ]]
 do
@@ -55,6 +56,9 @@ case $1 in
     -tp|--runner_run_type)
     type=$2
     ;;
+    -sf|--settings_file)
+    settings_file=$2
+    ;;
 esac
 shift
 done
@@ -75,6 +79,7 @@ for i in $(seq 1 $runner_count); do
     echo "VM deployed with id $vm_id"
 
     vm_ip=$(echo $vm_info | jq -r '.ip')
+    vm_ip=$(map_ip $vm_ip $settings_file)
     vm_ssh_port=$(echo $vm_info | jq -r '.ssh_port')
 
     if ! valid_ip $vm_ip; then
@@ -86,6 +91,8 @@ for i in $(seq 1 $runner_count); do
         echo "Invalid port: $vm_ssh_port"
         exit -1
     fi
+
+    echo "Connecting to $vm_ip:$vm_ssh_port"
 
     echo "Waiting for sshd to be available"
     for i in $(seq 1 30); do
