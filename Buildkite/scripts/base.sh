@@ -1,6 +1,7 @@
 #!/bin/bash
 
 CONNECTION_INFO_FILE=/tmp/$BUILDKITE_JOB_ID-connection-info
+SETTINGS_FILE='/var/buildkite/settings.json'
 
 function buildkite-comment {
   echo -ne "\033[90m"
@@ -34,4 +35,22 @@ function valid_ip {
         fi
     fi
     return -1
+}
+
+function map_ip {
+    local current_ip=${1}
+    local result=$current_ip
+    if [[ -f "$SETTINGS_FILE" ]]; then
+        mappings=($(jq -r '.mappings[] | .private_host, .public_host' $SETTINGS_FILE))
+        for ((i = 0; i < ${#mappings[@]}; i+=2)); do
+            if [[ "$current_ip" == "${mappings[$i]}" ]]; then
+                result=${mappings[$((i + 1))]}
+                break
+            fi
+        done
+    fi
+
+    echo $result
+
+    return 0
 }

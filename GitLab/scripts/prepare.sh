@@ -29,6 +29,7 @@ vm_id=$(echo $vm_info | jq -r '.vm_id')
 echo "$vm_id" > $BUILD_ID
 
 vm_ip=$(echo $vm_info | jq -r '.ip')
+vm_ip=$(map_ip $vm_ip)
 vm_ssh_port=$(echo $vm_info | jq -r '.ssh_port')
 
 if ! valid_ip $vm_ip; then
@@ -42,6 +43,8 @@ if [ -z "$vm_ssh_port" ]; then
 fi
 
 echo "$vm_ip;$vm_ssh_port" > $CONNECTION_INFO_ID
+
+echo "Connecting to $vm_ip:$vm_ssh_port"
 
 echo "Waiting for sshd to be available..."
 for i in $(seq 1 30); do
