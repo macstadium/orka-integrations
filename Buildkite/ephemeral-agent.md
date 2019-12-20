@@ -72,6 +72,10 @@ The provided scripts expect the following environment variables to be set:
 * `ORKA_VM_NAME` - The name of the VM to be deployed. This should match the VM config created [earlier](#set-up-an-orka-vm-config-for-the-ephemeral-agents)
 * `ORKA_VM_USER` - User used to SSH to the VM
 
+## Advanced configuration
+
+For more information about the advanced settings you can use, see [here](template-settings.md).
+
 ## Using the Buildkite agent
 
 Once the setup of the Buildkite agent is finished, you can run your CI/CD pipelines in Orka.

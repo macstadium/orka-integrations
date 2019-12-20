@@ -54,9 +54,10 @@ To set up multiple GitHub Actions runner, you need to:
         * `-s` or `--ssh_key_location` - (Required) The location on your local machine of the SSH key used to connect to the Orka VMs. By default it is `~/.ssh/id_rsa`.
         * `-t` or `--github_token` - (Required) The GitHub token you obtained in **Step 1**.
         * `-r` or `--repository` - (Required) The URL of the GitHub repository you want to attach the runner to.
-        * `-rv` or `--runner_version` - (Optional) The version of the runner. If not specified, defaults to `2.160.2`.
+        * `-rv` or `--runner_version` - (Optional) The version of the runner. If not specified, defaults to `2.161.3`.
         * `-tp` or `--runner_run_type` - (Optional) One of `command` or `service`. Choose `service` if you want the runner to start automatically when the VM starts. Choose `command` if you want to manually start the runner every time the VM starts. If not specified, defaults to `service`.  
-        **Note** If you don't specify or you set to `service`, you need to enable automatic login during startup. To do that, follow these [instructions][auto-login].
+        **Note** If you don't specify or you set to `service`, you need to enable automatic login during startup. To do that, follow these [instructions][auto-login].  
+        * `-sf` or `--settings_file` - (Optional) Advanced settings file location. Defaults to `{script_dir}/settings.json`. For more information see [here](#advanced-configuration).  
 
 ## Environment variables
 
@@ -74,6 +75,11 @@ You can also use environment variables instead of passing arguments to the [mult
 * `RUNNER_NAME`
 * `RUNNER_VERSION`
 * `RUNNER_RUN_TYPE`
+* `SETTINGS_FILE`
+
+## Advanced configuration
+
+For more information about the advanced settings you can use, see [here](template-settings.md).
 
 ## Using the self-hosted GitHub Actions runner
 
