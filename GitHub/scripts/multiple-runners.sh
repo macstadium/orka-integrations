@@ -16,7 +16,7 @@ runner_count=${RUNNER_COUNT:-1}
 ssh_key_location=${SSH_KEY_LOCATION:-$HOME/.ssh/id_rsa}
 github_token=${GITHUB_TOKEN:-}
 repository=${REPOSITORY:-}
-version=${RUNNER_VERSION:-"2.160.2"}
+version=${RUNNER_VERSION:-"2.163.1"}
 type=${RUNNER_RUN_TYPE:-"service"}
 
 while [[ "$#" -gt 0 ]]
