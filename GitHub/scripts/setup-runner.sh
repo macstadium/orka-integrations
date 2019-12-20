@@ -5,7 +5,7 @@ set -euo pipefail
 github_token=${GITHUB_TOKEN:-}
 repository=${REPOSITORY:-}
 runner=${RUNNER_NAME:-$(uuidgen)}
-version=${RUNNER_VERSION:-"2.160.2"}
+version=${RUNNER_VERSION:-"2.163.1"}
 type=${RUNNER_RUN_TYPE:-"service"}
 work_dir=${RUNNER_WORK_DIR:-"_work"}
 deploy_dir=${RUNNER_DEPLOY_DIR:-"$HOME/actions-runner"}
@@ -43,7 +43,7 @@ mkdir $deploy_dir
 curl -o $deploy_dir/actions-runner.tar.gz https://githubassets.azureedge.net/runners/$version/actions-runner-osx-x64-$version.tar.gz 
 cd $deploy_dir && tar xzf $deploy_dir/actions-runner.tar.gz
 
-$deploy_dir/config.sh --url $repository --token $github_token --agent $runner --work $work_dir
+$deploy_dir/config.sh --url $repository --token $github_token --name $runner --work $work_dir
 
 if [[ "$type" == "service" ]]; then
     echo "Installing service"
