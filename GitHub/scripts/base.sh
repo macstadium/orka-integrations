@@ -15,10 +15,17 @@ function valid_ip {
     return -1
 }
 
-function report_timeout {
+function handle_exit {
+    local token=${1}
+    local orka_endpoint=${2}
+
     if [ $? -eq 28 ]; then
         echo "Curl opertion timed out. Exiting..."
     fi
+
+    echo "Revoking token..."
+    token_response=$(curl -s -m 60 -H "Content-Type: application/json" -H "Authorization: Bearer $token" -X DELETE $orka_endpoint/token)
+    echo "Token revoked: $token_response"
 }
 
 function map_ip {

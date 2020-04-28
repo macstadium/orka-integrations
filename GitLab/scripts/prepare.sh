@@ -10,6 +10,7 @@ trap system_failiure ERR
 echo "Authenticating with Orka..."
 
 token=$(curl -m 60 -sd '{"email":'\"$ORKA_USER\"', "password":'\"$ORKA_PASSWORD\"'}' -H "Content-Type: application/json" -X POST $ORKA_ENDPOINT/token | jq -r '.token')
+trap 'revoke_token $token $ORKA_ENDPOINT' EXIT
 
 echo "Authenticated."
 

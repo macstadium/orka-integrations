@@ -54,3 +54,12 @@ function map_ip {
 
     return 0
 }
+
+function revoke_token {
+    local token=${1}
+    local orka_endpoint=${2}
+
+    echo "Revoking token..."
+    token_response=$(curl -s -m 60 -H "Content-Type: application/json" -H "Authorization: Bearer $token" -X DELETE $orka_endpoint/token)
+    echo "Token revoked: $token_response"
+}

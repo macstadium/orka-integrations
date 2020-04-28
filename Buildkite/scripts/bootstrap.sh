@@ -11,6 +11,7 @@ trap 'buildkite-hook "pre-exit" "$BUILDKITE_HOOKS_PATH/pre-exit"' EXIT
 echo "~~~ Deploying ephemeral agent"
 
 token=$(curl -m 60 -sd '{"email":'\"$ORKA_USER\"', "password":'\"$ORKA_PASSWORD\"'}' -H "Content-Type: application/json" -X POST $ORKA_ENDPOINT/token | jq -r '.token')
+trap 'revoke_token $token $ORKA_ENDPOINT' EXIT
 
 vm_info=$(curl -m 60 -sd '{"orka_vm_name":'\"$ORKA_VM_NAME\"'}' -H "Content-Type: application/json" -H "Authorization: Bearer $token" -X POST $ORKA_ENDPOINT/resources/vm/deploy)
 
