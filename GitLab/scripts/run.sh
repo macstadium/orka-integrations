@@ -10,4 +10,4 @@ IFS=';' read -ra info <<< "$connection_info"
 vm_ip=${info[0]}
 vm_ssh_port=${info[1]}
 
-ssh -i /root/.ssh/id_rsa -o ServerAliveInterval=60 -o ServerAliveCountMax=60 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $ORKA_VM_USER@$vm_ip -p $vm_ssh_port /bin/bash < "${1}"
+ssh -i /root/.ssh/id_rsa -o ServerAliveInterval=60 -o ServerAliveCountMax=60 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $ORKA_VM_USER@$vm_ip -p $vm_ssh_port /bin/bash -l < "${1}"
