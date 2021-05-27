@@ -40,7 +40,7 @@ done
 
 mkdir $deploy_dir
 
-curl -o $deploy_dir/actions-runner.tar.gz https://githubassets.azureedge.net/runners/$version/actions-runner-osx-x64-$version.tar.gz 
+curl -o $deploy_dir/actions-runner.tar.gz https://github.com/actions/runner/releases/download/$version/actions-runner-osx-x64-$version.tar.gz
 cd $deploy_dir && tar xzf $deploy_dir/actions-runner.tar.gz
 
 $deploy_dir/config.sh --url $repository --token $github_token --name $runner --work $work_dir
