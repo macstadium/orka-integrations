@@ -1,0 +1,19 @@
+name: build
+
+on:
+  push:
+    branch:
+      - master
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run ShellCheck
+      uses: ludeeus/action-shellcheck@master
+      with:
+        scandir: ./GitLab/scripts/
+        check_together: yes
+      env:
+        SHELLCHECK_OPTS: -x
