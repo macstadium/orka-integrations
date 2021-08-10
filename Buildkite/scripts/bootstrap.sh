@@ -14,14 +14,19 @@ token=$(curl -m 60 -sd '{"email":'\"$ORKA_USER\"', "password":'\"$ORKA_PASSWORD\
 
 trap 'revoke_token $token $ORKA_ENDPOINT' ERR
 vm_info=$(curl -m 60 -sd '{"orka_vm_name":'\"$ORKA_VM_NAME\"'}' -H "Content-Type: application/json" -H "Authorization: Bearer $token" -X POST $ORKA_ENDPOINT/resources/vm/deploy)
+errors=$(echo $vm_info | jq -r '.errors[]?.message')
+
+while [ "$errors" ]
+do
+    echo "VM deploy failed with: $errors"
+    echo "Waiting for 10 seconds"
+    sleep 10
+    echo "Retrying VM deployment..."
+    vm_info=$(curl -m 60 -sd '{"orka_vm_name":'\"$ORKA_VM_NAME\"'}' -H "Content-Type: application/json" -H "Authorization: Bearer $token" -X POST $ORKA_ENDPOINT/resources/vm/deploy)
+    errors=$(echo $vm_info | jq -r '.errors[]?.message')
+done
 revoke_token $token $ORKA_ENDPOINT
 trap '' ERR
-
-errors=$(echo $vm_info | jq -r '.errors[]?.message')
-if [ "$errors" ]; then
-    echo "VM deploy failed with: $errors"
-    exit -1
-fi
 
 vm_id=$(echo $vm_info | jq -r '.vm_id')
 echo "$vm_id" > $CONNECTION_INFO_FILE
