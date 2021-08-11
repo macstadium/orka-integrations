@@ -25,12 +25,17 @@ echo "Authenticated."
 echo "Deploying a VM..."
 
 vm_info=$(curl -m 60 -sd '{"orka_vm_name": "'"$ORKA_VM_NAME"'"}' -H "Content-Type: application/json" -H "Authorization: Bearer $token" -X POST "$ORKA_ENDPOINT/resources/vm/deploy")
-
 error_msg=$(echo "$vm_info" | jq -r '.errors[]?.message')
-if [ "$error_msg" ]; then
+
+while [ "$error_msg" ]
+do
     echo "VM deploy failed with: $error_msg"
-    exit "$SYSTEM_FAILURE_EXIT_CODE"
-fi
+    echo "Waiting for 10 seconds"
+    sleep 10
+    echo "Retrying VM deployment..."
+    vm_info=$(curl -m 60 -sd '{"orka_vm_name": "'"$ORKA_VM_NAME"'"}' -H "Content-Type: application/json" -H "Authorization: Bearer $token" -X POST "$ORKA_ENDPOINT/resources/vm/deploy")
+    error_msg=$(echo "$vm_info" | jq -r '.errors[]?.message')
+done
 
 echo "VM deployed."
 
