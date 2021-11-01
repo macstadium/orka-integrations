@@ -106,7 +106,7 @@ for i in $(seq 1 $runner_count); do
             exit -1
         fi
 
-        sleep 1s
+        sleep 1
     done
 
     env_vars=(
