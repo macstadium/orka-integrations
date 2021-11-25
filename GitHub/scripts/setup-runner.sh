@@ -5,10 +5,12 @@ set -euo pipefail
 github_token=${GITHUB_TOKEN:-}
 repository=${REPOSITORY:-}
 runner=${RUNNER_NAME:-$(uuidgen)}
-version=${RUNNER_VERSION:-"2.163.1"}
+version=${RUNNER_VERSION:-"2.284.0"}
 type=${RUNNER_RUN_TYPE:-"service"}
 work_dir=${RUNNER_WORK_DIR:-"_work"}
 deploy_dir=${RUNNER_DEPLOY_DIR:-"$HOME/actions-runner"}
+group=${RUNNER_GROUP:-"default"}
+labels=${RUNNER_LABELS:-"macOS"}
 
 while [[ "$#" -gt 0 ]]
 do
@@ -34,6 +36,12 @@ case $1 in
     -d|--runner_deploy_dir)
     deploy_dir=$2
     ;;
+    -g|--runner_group)
+    group=$2
+    ;;
+    -l|--runner_labels)
+    labels=$2
+    ;;
 esac
 shift
 done
@@ -43,7 +51,7 @@ mkdir $deploy_dir
 curl -o $deploy_dir/actions-runner.tar.gz -L https://github.com/actions/runner/releases/download/v$version/actions-runner-osx-x64-$version.tar.gz
 cd $deploy_dir && tar xzf $deploy_dir/actions-runner.tar.gz
 
-$deploy_dir/config.sh --url $repository --token $github_token --name $runner --work $work_dir
+$deploy_dir/config.sh --url $repository --token $github_token --name $runner --work $work_dir --runnergroup $group --labels $labels
 
 if [[ "$type" == "service" ]]; then
     echo "Installing service"
