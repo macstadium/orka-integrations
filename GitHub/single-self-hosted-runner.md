@@ -31,7 +31,7 @@ To set up a GitHub Actions runner, you need to:
     **Note** If you don't specify or you set to `service`, you need to enable automatic login during startup. To do that, follow these [instructions][auto-login].
     * `-w` or `--runner_work_dir` - (Optional) Runner working directory. If not specified, defaults to `_work` under the runner installation directory.
     * `-g` or `--runner-group` - (Optional) The group the runner is assigned to. If not specified, defaults to `default`.
-    * `-l` or `--runner-labels` - (Optional) The additional labels of the runner. If not specific, defaults to `macOS`.
+    * `-l` or `--runner-labels` - (Optional) The additional labels of the runner. If not specified, defaults to `macOS`.
     * `-d` or `--runner_deploy_dir` - (Optional) Runner installation directory. If not specified, defaults to `actions-runner` under the user home directory.
 
 ## Environment variables
