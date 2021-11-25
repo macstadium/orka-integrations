@@ -30,6 +30,8 @@ To set up a GitHub Actions runner, you need to:
     * `-tp` or `--runner_run_type` - (Optional) One of `command` or `service`. Choose `service` if you want the runner to start automatically when the VM starts. Choose `command` if you want to manually start the runner every time the VM starts. If not specified, defaults to `service`.  
     **Note** If you don't specify or you set to `service`, you need to enable automatic login during startup. To do that, follow these [instructions][auto-login].
     * `-w` or `--runner_work_dir` - (Optional) Runner working directory. If not specified, defaults to `_work` under the runner installation directory.
+    * `-g` or `--runner-group` - (Optional) The group the runner is assigned to. If not specified, defaults to `default`.
+    * `-l` or `--runner-labels` - (Optional) The additional labels of the runner. If not specified, defaults to `macOS`.
     * `-d` or `--runner_deploy_dir` - (Optional) Runner installation directory. If not specified, defaults to `actions-runner` under the user home directory.
 
 ## Environment variables

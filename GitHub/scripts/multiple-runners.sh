@@ -14,8 +14,10 @@ runner_count=${RUNNER_COUNT:-1}
 ssh_key_location=${SSH_KEY_LOCATION:-$HOME/.ssh/id_rsa}
 github_token=${GITHUB_TOKEN:-}
 repository=${REPOSITORY:-}
-version=${RUNNER_VERSION:-"2.163.1"}
+version=${RUNNER_VERSION:-"2.284.0"}
 type=${RUNNER_RUN_TYPE:-"service"}
+group=${RUNNER_GROUP:-"default"}
+labels=${RUNNER_LABELS:-"macOS"}
 settings_file=${SETTINGS_FILE:-"${currentDir}/settings.json"}
 
 while [[ "$#" -gt 0 ]]
@@ -53,6 +55,12 @@ case $1 in
     ;;
     -tp|--runner_run_type)
     type=$2
+    ;;
+    -g|--runner_group)
+    group=$2
+    ;;
+    -l|--runner_labels)
+    labels=$2
     ;;
     -sf|--settings_file)
     settings_file=$2
@@ -115,6 +123,8 @@ for i in $(seq 1 $runner_count); do
         RUNNER_NAME=$vm_id
         RUNNER_VERSION=$version
         RUNNER_RUN_TYPE=$type
+        RUNNER_GROUP=$group
+        RUNNER_LABELS=$labels
     )
 
     echo 'Connecting to VM and setting up agent'
