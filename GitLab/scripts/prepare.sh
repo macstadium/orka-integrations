@@ -33,7 +33,7 @@ do
     echo "Waiting for 10 seconds"
     sleep 10
     echo "Retrying VM deployment..."
-    vm_info=$(curl -m 60 -sd '{"orka_vm_name": "'"$ORKA_VM_NAME"'"}' -H "Content-Type: application/json" -H "Authorization: Bearer $token" -X POST "$ORKA_ENDPOINT/resources/vm/deploy")
+    vm_info=$(curl -m 900 -sd '{"orka_vm_name": "'"$ORKA_VM_NAME"'"}' -H "Content-Type: application/json" -H "Authorization: Bearer $token" -X POST "$ORKA_ENDPOINT/resources/vm/deploy")
     error_msg=$(echo "$vm_info" | jq -r '.errors[]?.message')
 done
 
