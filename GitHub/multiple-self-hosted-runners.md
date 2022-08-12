@@ -78,6 +78,7 @@ You can also use environment variables instead of passing arguments to the [mult
 * `RUNNER_VERSION`
 * `RUNNER_RUN_TYPE`
 * `SETTINGS_FILE`
+* `DEPLOY_TIMEOUT`
 
 ## Advanced configuration
 

@@ -19,6 +19,7 @@ type=${RUNNER_RUN_TYPE:-"service"}
 group=${RUNNER_GROUP:-"default"}
 labels=${RUNNER_LABELS:-"macOS"}
 settings_file=${SETTINGS_FILE:-"${currentDir}/settings.json"}
+deploy_timeout=${DEPLOY_TIMEOUT:-60}
 
 while [[ "$#" -gt 0 ]]
 do
@@ -65,6 +66,9 @@ case $1 in
     -sf|--settings_file)
     settings_file=$2
     ;;
+    -dt|--deploy_timeout)
+    deploy_timeout=$2
+    ;;
 esac
 shift
 done
@@ -75,7 +79,7 @@ trap 'handle_exit $token $orka_endpoint' EXIT
 
 for i in $(seq 1 $runner_count); do
     echo "Booting VM #$i"
-    vm_info=$(curl -m 60 -sd '{"orka_vm_name":'\"$orka_vm_name\"'}' -H "Content-Type: application/json" -H "Authorization: Bearer $token" -X POST $orka_endpoint/resources/vm/deploy)
+    vm_info=$(curl -m $deploy_timeout -sd '{"orka_vm_name":'\"$orka_vm_name\"'}' -H "Content-Type: application/json" -H "Authorization: Bearer $token" -X POST $orka_endpoint/resources/vm/deploy)
 
     errors=$(echo $vm_info | jq -r '.errors[]?.message')
     if [ "$errors" ]; then
