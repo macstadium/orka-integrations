@@ -36,11 +36,11 @@ function revoke_token {
     local token=${1}
     local orka_endpoint=${2}
     
-    api_version=$(curl $orka_endpoint/health-check | jq '.api_version' | sed 's/[\.\"]//g')
+    api_version=$(curl "$orka_endpoint"/health-check | jq '.api_version' | sed 's/[\.\"]//g')
 
-    if [ $api_version -lt 210 ]; then
+    if [ "$api_version" -lt "210" ]; then
         echo "Revoking token..."
-        token_response=$(curl -s -m 60 -H "Content-Type: application/json" -H "Authorization: Bearer $token" -X DELETE $orka_endpoint/token)
+        token_response=$(curl -s -m 60 -H "Content-Type: application/json" -H "Authorization: Bearer $token" -X DELETE "$orka_endpoint"/token)
         echo "Token revoked: $token_response"
     fi
 }
