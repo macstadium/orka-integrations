@@ -59,7 +59,7 @@ function revoke_token {
     local token=${1}
     local orka_endpoint=${2}
     
-    api_version=$(curl $orka_endpoint/health-check | jq ".api_version" | sed 's/[\."]//g')
+    api_version=$(curl $orka_endpoint/health-check | jq ".api_version" | sed 's/[\.\"]//g')
 
     if [ $api_version -lt 210 ]; then
         echo "Revoking token..."
