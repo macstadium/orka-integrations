@@ -23,7 +23,7 @@ function handle_exit {
         echo "Curl opertion timed out. Exiting..."
     fi
 
-    api_version=$(curl $orka_endpoint/health-check | jq '.api_version' | sed 's/[\.\"]//g')
+    api_version=$(curl -s $orka_endpoint/health-check | jq '.api_version' | sed 's/[\.\"]//g')
 
     if [ $api_version -lt 210 ]; then
         echo "Revoking token..."
