@@ -23,9 +23,13 @@ function handle_exit {
         echo "Curl opertion timed out. Exiting..."
     fi
 
-    echo "Revoking token..."
-    token_response=$(curl -s -m 60 -H "Content-Type: application/json" -H "Authorization: Bearer $token" -X DELETE $orka_endpoint/token)
-    echo "Token revoked: $token_response"
+    api_version=$(curl -s $orka_endpoint/health-check | jq '.api_version' | sed 's/[\.\"]//g')
+
+    if [ $api_version -lt 210 ]; then
+        echo "Revoking token..."
+        token_response=$(curl -s -m 60 -H "Content-Type: application/json" -H "Authorization: Bearer $token" -X DELETE $orka_endpoint/token)
+        echo "Token revoked: $token_response"
+    fi
 }
 
 function map_ip {
