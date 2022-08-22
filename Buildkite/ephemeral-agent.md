@@ -71,6 +71,7 @@ The provided scripts expect the following environment variables to be set:
 * `ORKA_ENDPOINT` - The Orka endpoint. Usually, it is `http://10.10.10.100`
 * `ORKA_VM_NAME` - The name of the VM to be deployed. This should match the VM config created [earlier](#set-up-an-orka-vm-config-for-the-ephemeral-agents)
 * `ORKA_VM_USER` - User used to SSH to the VM
+* `DEPLOY_TIMEOUT` - Number of seconds to wait for the VM to be deployed
 
 ## Advanced configuration
 
