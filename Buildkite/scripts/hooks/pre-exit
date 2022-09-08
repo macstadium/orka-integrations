@@ -2,14 +2,10 @@
 
 set -eo pipefail
 
+currentDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+source ${currentDir}/../base.sh
+
 CONNECTION_INFO_FILE=/tmp/$BUILDKITE_JOB_ID-connection-info
-
-function revoke_token {
-    local token=${1}
-    local orka_endpoint=${2}
-
-    curl -m 60 -H "Content-Type: application/json" -H "Authorization: Bearer $token" -X DELETE $orka_endpoint/token
-}
 
 if [[ -f "$CONNECTION_INFO_FILE" ]]; then
     token=$(curl -m 60 -sd '{"email":'\"$ORKA_USER\"', "password":'\"$ORKA_PASSWORD\"'}' -H "Content-Type: application/json" -X POST $ORKA_ENDPOINT/token | jq -r '.token')
