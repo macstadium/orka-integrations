@@ -54,7 +54,7 @@ esac
 shift
 done
 
-mkdir $deploy_dir
+mkdir -p $deploy_dir
 
 curl -o $deploy_dir/actions-runner.tar.gz -L https://github.com/actions/runner/releases/download/v$version/actions-runner-osx-x64-$version.tar.gz
 cd $deploy_dir && tar xzf $deploy_dir/actions-runner.tar.gz
