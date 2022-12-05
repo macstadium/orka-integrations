@@ -63,12 +63,13 @@ config_command="$deploy_dir/config.sh --url $repository --token $github_token --
 
 if [[ $ephemeral == "true" ]]; then
     config_command="$config_command --ephemeral"
+    eval $config_command
+elif [[ $ephemeral == "false" ]]; then
+    eval $config_command
 else
     echo "Invalid input for the ephemeral tag."
     exit 1
 fi
-
-eval $config_command
 
 if [[ "$type" == "service" ]]; then
     echo "Installing service"
