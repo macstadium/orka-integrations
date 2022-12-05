@@ -59,15 +59,16 @@ mkdir -p $deploy_dir
 curl -o $deploy_dir/actions-runner.tar.gz -L https://github.com/actions/runner/releases/download/v$version/actions-runner-osx-x64-$version.tar.gz
 cd $deploy_dir && tar xzf $deploy_dir/actions-runner.tar.gz
 
-if [[ $ephemeral = "false" ]]
-then
-    $deploy_dir/config.sh --url $repository --token $github_token --name $runner --work $work_dir --runnergroup $group --labels $labels
-elif [[ $ephemeral = "true" ]]
-then
-    $deploy_dir/config.sh --url $repository --token $github_token --name $runner --work $work_dir --runnergroup $group --labels $labels --ephemeral
+config_command="$deploy_dir/config.sh --url $repository --token $github_token --name $runner --work $work_dir --runnergroup $group --labels $labels"
+
+if [[ $ephemeral == "true" ]]; then
+    config_command="$config_command --ephemeral"
 else
     echo "Invalid input for the ephemeral tag."
+    exit 1
 fi
+
+eval $config_command
 
 if [[ "$type" == "service" ]]; then
     echo "Installing service"
