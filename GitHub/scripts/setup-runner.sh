@@ -56,7 +56,7 @@ done
 
 mkdir -p $deploy_dir
 
-curl -o $deploy_dir/actions-runner.tar.gz -L https://github.com/actions/runner/releases/download/v$version/actions-runner-osx-x64-$version.tar.gz
+curl -o $deploy_dir/actions-runner.tar.gz -L https://github.com/actions/runner/releases/download/v$version/actions-runner-osx-$cpu-$version.tar.gz
 cd $deploy_dir && tar xzf $deploy_dir/actions-runner.tar.gz
 
 config_command="$deploy_dir/config.sh --url $repository --token $github_token --name $runner --work $work_dir --runnergroup $group --labels $labels"
