@@ -26,13 +26,15 @@ To set up a GitHub Actions runner, you need to:
     * `-t` or `--github_token` - (Required) The GitHub token you obtained in **Step 1**.
     * `-r` or `--repository` - (Required) The URL of the GitHub repository you want to attach the runner to.
     * `-n` or `--runner_name` - (Optional) A name for the runner. If not specified, defaults to a custom GUID.
-    * `-v` or `--runner_version` - (Optional) The version of the runner. If not specified, defaults to `2.160.2`.
+    * `-v` or `--runner_version` - (Optional) The version of the runner. If not specified, defaults to `2.299.1`.
     * `-tp` or `--runner_run_type` - (Optional) One of `command` or `service`. Choose `service` if you want the runner to start automatically when the VM starts. Choose `command` if you want to manually start the runner every time the VM starts. If not specified, defaults to `service`.  
     **Note** If you don't specify or you set to `service`, you need to enable automatic login during startup. To do that, follow these [instructions][auto-login].
     * `-w` or `--runner_work_dir` - (Optional) Runner working directory. If not specified, defaults to `_work` under the runner installation directory.
     * `-g` or `--runner-group` - (Optional) The group the runner is assigned to. If not specified, defaults to `default`.
     * `-l` or `--runner-labels` - (Optional) The additional labels of the runner. If not specified, defaults to `macOS`.
     * `-d` or `--runner_deploy_dir` - (Optional) Runner installation directory. If not specified, defaults to `actions-runner` under the user home directory.
+    * `-c` or `--cpu` - (Optional) One of `x64` or `arm64`. Choose `x64` if the node has an Intel cpu. Choose `arm64` if the node has an Apple Silicon cpu. If not specified, defaults to `x64`.
+    * `-e` or `--ephemeral` - (Optional) One of `true` or `false`. Choose `true` if you want the runner to be ephemeral. Choose `false` if you want the runner to be persistent. If not specified, defaults to `false`.
 
 ## Environment variables
 
