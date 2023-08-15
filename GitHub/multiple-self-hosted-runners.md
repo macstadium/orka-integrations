@@ -54,6 +54,7 @@ To set up multiple GitHub Actions runner, you need to:
         * `-s` or `--ssh_key_location` - (Required) The location on your local machine of the SSH key used to connect to the Orka VMs. By default it is `~/.ssh/id_rsa`.
         * `-t` or `--github_token` - (Required) The GitHub token you obtained in **Step 1**.
         * `-r` or `--repository` - (Required) The URL of the GitHub repository you want to attach the runner to.
+        * `-cpu` or `--cpu-type` - (Required) Either x64 or arm64, depending if running on Intel or Apple Silicon nodes
         * `-rv` or `--runner_version` - (Optional) The version of the runner. If not specified, defaults to `2.284.0`.
         * `-g` or `--runner-group` - (Optional) The group the runner is assigned to. If not specific, defaults to `default`.
         * `-l` or `--runner-labels` - (Optional) The additional labels of the runner. If not specified, defaults to `macOS`.
@@ -72,6 +73,7 @@ You can also use environment variables instead of passing arguments to the [mult
 * `ORKA_VM_USER`
 * `RUNNER_COUNT`
 * `SSH_KEY_LOCATION`
+* `CPU_TYPE`
 * `GITHUB_TOKEN`
 * `REPOSITORY`
 * `RUNNER_NAME`
