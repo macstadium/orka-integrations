@@ -80,8 +80,6 @@ done
 token=$(curl -m 60 -sd '{"email":'\"$orka_user\"', "password":'\"$orka_password\"'}' -H "Content-Type: application/json" -X POST $orka_endpoint/token | jq -r '.token')
 
 trap 'handle_exit $token $orka_endpoint' EXIT
-echo "Version: $version"
-echo "CPU Type: $cpu"
 
 for i in $(seq 1 $runner_count); do
     echo "Booting VM #$i"
