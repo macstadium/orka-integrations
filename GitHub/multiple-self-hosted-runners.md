@@ -6,7 +6,7 @@ If you want to set up one runner manually, see [here](self-hosted-runner-manuall
 
 ## Requirements
 
-- [Orka][orka] VM config
+- [Orka 3][orka] cluster, CLI & VM config
 - [jq][jq] - command-line JSON processor used by the provided scripts
 
 ## Setup overview
@@ -45,18 +45,16 @@ To set up multiple GitHub Actions runner, you need to:
     * Install [jq][jq] - a command-line JSON processor used by the provided scripts.
     * Download [multiple-runners.sh](scripts/multiple-runners.sh), [setup-runner.sh](scripts/setup-runner.sh) and [base.sh](scripts/base.sh) files in the same directory.
     * Run the [multiple-runners.sh](scripts/multiple-runners.sh) script and provide the following arguments
-        * `-u` or `--orka_user` - (Required) User used to authenticate with the Orka environment. Created by running `orka user create`.
-        * `-p` or `--orka_password` - (Required) Password used to authenticate with the Orka environment. Created by running `orka user create`.
-        * `-e` or `--orka_endpoint` - (Required) The Orka endpoint. Usually, `http://10.10.10.100` OR `http://10.221.188.100`.
-        * `-v` or `--orka_vm_name` - (Required) The name of the VM config to be deployed. This should match the VM config created [earlier](#set-up-an-orka-vm-config-for-the-runner).
-        * `-vu` or `--orka_vm_user` - (Required) User used to SSH to the VM.
+        * `-cfg` or `--orka_config_name` - (Required) The name of the VM config to be deployed. This should match the VM config created [earlier](#set-up-an-orka-vm-config-for-the-runner).
+        * `-p` or `--orka_vm_name_prefix` - (Optional) The VM name prefix for the deployed VM(s). If not specified, defaults to `gh-runner`
+        * `-vu` or `--orka_vm_user` - (Optional) User used to SSH to the VM. If not specified, defaults to `admin`.
         * `-c` or `--runner_count` - (Optional) The number of runners to be created. If not specified, defaults to `1`.
-        * `-s` or `--ssh_key_location` - (Required) The location on your local machine of the SSH key used to connect to the Orka VMs. By default it is `~/.ssh/id_rsa`.
-        * `-t` or `--github_token` - (Required) The GitHub token you obtained in **Step 1**.
-        * `-r` or `--repository` - (Required) The URL of the GitHub repository you want to attach the runner to.
-        * `-rv` or `--runner_version` - (Optional) The version of the runner. If not specified, defaults to `2.284.0`.
+        * `-s` or `--ssh_key_location` - (Optional) The location on your local machine of the SSH key used to connect to the Orka VMs. By default it is `~/.ssh/id_rsa`.
+        * `-t` or `--token` or `--github_token` - (Required) The GitHub token you obtained in **Step 1**.
+        * `-r` or `--url` or `--repository` - (Required) The URL of the GitHub repository you want to attach the runner to.
+        * `-rv` or `--runner_version` - (Optional) The version of the runner. If not specified, defaults to `2.309.0`.
         * `-g` or `--runner-group` - (Optional) The group the runner is assigned to. If not specific, defaults to `default`.
-        * `-l` or `--runner-labels` - (Optional) The additional labels of the runner. If not specified, defaults to `macOS`.
+        * `-l` or `--runner-labels` - (Optional) The additional labels of the runner, as a comma-separated list. If not specified, defaults to `macOS`.
         * `-tp` or `--runner_run_type` - (Optional) One of `command` or `service`. Choose `service` if you want the runner to start automatically when the VM starts. Choose `command` if you want to manually start the runner every time the VM starts. If not specified, defaults to `service`.  
         **Note** If you don't specify or you set to `service`, you need to enable automatic login during startup. To do that, follow these [instructions][auto-login].  
         * `-sf` or `--settings_file` - (Optional) Advanced settings file location. Defaults to `{script_dir}/settings.json`. For more information see [here](#advanced-configuration).  
@@ -65,10 +63,8 @@ To set up multiple GitHub Actions runner, you need to:
 
 You can also use environment variables instead of passing arguments to the [multiple-runners.sh](scripts/multiple-runners.sh) script. These are the available variables:
 
-* `ORKA_USER`
-* `ORKA_PASSWORD`
-* `ORKA_ENDPOINT`
-* `ORKA_VM_NAME`
+* `ORKA_IMAGE_NAME`
+* `ORKA_VM_NAME_PREFIX`
 * `ORKA_VM_USER`
 * `RUNNER_COUNT`
 * `SSH_KEY_LOCATION`
