@@ -3,11 +3,17 @@
 BUILD_ID="runner-$CUSTOM_ENV_CI_RUNNER_ID-project-$CUSTOM_ENV_CI_PROJECT_ID-concurrent-$CUSTOM_ENV_CI_CONCURRENT_PROJECT_ID"
 export CONNECTION_INFO_ID=$BUILD_ID-connection-info
 
-ORKA_USER=${ORKA_USER:-$CUSTOM_ENV_ORKA_USER}
-ORKA_PASSWORD=${ORKA_PASSWORD:-$CUSTOM_ENV_ORKA_PASSWORD}
-ORKA_ENDPOINT=${ORKA_ENDPOINT:-$CUSTOM_ENV_ORKA_ENDPOINT}
-ORKA_VM_NAME=${ORKA_VM_NAME:-$CUSTOM_ENV_ORKA_VM_NAME}
-ORKA_VM_USER=${ORKA_VM_USER:-$CUSTOM_ENV_ORKA_VM_USER}
+ORKA_TOKEN=${CUSTOM_ENV_ORKA_TOKEN:-}
+ORKA_ENDPOINT=${CUSTOM_ENV_ORKA_ENDPOINT:-}
+ORKA_CONFIG_NAME=${CUSTOM_ENV_ORKA_CONFIG_NAME:-}
+ORKA_VM_NAME_PREFIX=${CUSTOM_ENV_ORKA_VM_NAME_PREFIX:-gl-runner}
+ORKA_VM_USER=${CUSTOM_ENV_ORKA_VM_USER:-admin}
+ORKA_SSH_KEY_FILE=${CUSTOM_ENV_ORKA_SSH_KEY_FILE:-}
+
+mkdir -p ~/.ssh
+echo "$ORKA_SSH_KEY_FILE" > ~/.ssh/orka_deployment_key
+chmod 600 ~/.ssh/orka_deployment_key
+ORKA_SSH_KEY_FILE=~/.ssh/orka_deployment_key
 
 SETTINGS_FILE='/var/custom-executor/settings.json'
 
@@ -27,22 +33,9 @@ function valid_ip {
 
 function system_failure {
     if [ $? -eq 28 ]; then
-        echo "Curl opertion timed out. Exiting..."
+        echo "Curl operation timed out. Exiting..."
     fi
     exit "$SYSTEM_FAILURE_EXIT_CODE"
-}
-
-function revoke_token {
-    local token=${1}
-    local orka_endpoint=${2}
-    
-    api_version=$(curl -s "$orka_endpoint"/health-check | jq '.api_version' | sed 's/[\.\"]//g')
-
-    if [ "$api_version" -lt "211" ]; then
-        echo "Revoking token..."
-        token_response=$(curl -s -m 60 -H "Content-Type: application/json" -H "Authorization: Bearer $token" -X DELETE "$orka_endpoint"/token)
-        echo "Token revoked: $token_response"
-    fi
 }
 
 function map_ip {

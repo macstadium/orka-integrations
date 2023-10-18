@@ -31,7 +31,7 @@ You will later use this base image to create a VM config (a container template) 
    **Note**: The VM IP and the SSH and VNC ports are displayed once the VM is deployed in Orka.
 3. Verify that SSH login with a private key is enabled. SSH login is used by the Custom executor to communicate with the Orka VM.  
    **Note**: The private ssh key must not have password as the GitLab Runner will not be able to load it.
-4. On your local machine, run `orka image save`. The command saves the base image in Orka.
+4. On your local machine, run `orka3 vm <VM_NAME> commit`. The command saves the base image in Orka.
 
 ## Set up an Orka VM config for the ephemeral agents
 
@@ -48,12 +48,10 @@ To do that:
 1. Navigate to the [Dockerfile](Dockerfile) directory.
 2. Build a Docker image by running `docker build . -t orka-gitlab`.
    **Note**: The Dockerfile supports the Alpine GitLab Runner docker images. By default the [Dockerfile](Dockerfile) uses the latest GitLab Alpine docker image. If you want to specify another version, use the `BASE_VERSION` build argument: `docker build . -t orka-gitlab --build-args BASE_VERSION=alpine-bleeding`.
-3. Run a container using the Docker image you built.
-   Verify that the private SSH key for connecting to the ephemeral agent is mounted as the `/root/.ssh/id_rsa` file on the container. This key was created earlier during the Orka base image setup.
-4. [Obtain a token][obtain-token]. The token will be used in **Step 5** to register the newly installed GitLab Runner.
-5. [Register][register-runner] the Runner. This is the process that binds the Runner to GitLab. To register the Runner, run the following command inside the container:  
-   `gitlab-runner register --non-interactive --executor "custom" --url "{gitlab-server-url}" --registration-token "{gitlab-registration-token}" --description="orka-runner"`. Replace the placeholders with the correct values.
-6. Verify that the container has network visibility to the Orka environment. If the machine, running the container, is part of the Orka environment, skip this step. You can use any VPN client to connect to the Orka environment. For more information, see your Orka [IP Plan][ip-plan].
+3. [Obtain a token][obtain-token]. The token will be used in the next step to register the newly installed GitLab Runner.
+4. [Register][register-runner] and start the Runner. This is the process that binds the Runner to GitLab. To register the Runner, run the following command:  
+   `docker run -e TOKEN=${REGISTRATION_TOKEN} orka-runner`. Replace the placeholders with the correct values.
+5. Verify that the container has network visibility to the Orka environment. If the machine, running the container, is part of the Orka environment, skip this step. You can use any VPN client to connect to the Orka environment. For more information, see your Orka [IP Plan][ip-plan].
 
 **Note** If you want to set up the Runner manually, see [here](runner-manual-setup.md).
 
@@ -61,12 +59,12 @@ To do that:
 
 The provided scripts expect the following environment variables to be set:
 
-- `ORKA_USER` - User used to connect to the Orka environment. Created by running `orka user create`
-- `ORKA_PASSWORD` - Password used to connect to the Orka environment. Created by running `orka user create`
-- `ORKA_ENDPOINT` - The Orka endpoint. Usually, it is `http://10.10.10.100`
-- `ORKA_VM_NAME` - The name of the VM to be deployed
-- `ORKA_VM_USER` - User used to SSH to the VM
-- `DEPLOY_TIMEOUT` - Number of seconds to wait for the VM to be deployed
+- `ORKA_ORKA_TOKEN` - User authentication to connect to the Orka environment. Created by running `orka3 user get-token` or `orka3 serviceaccount token <service-account>`.
+- `ORKA_ENDPOINT` - The Orka endpoint. Usually, it is `http://10.221.188.20`.
+- `ORKA_CONFIG_NAME` - The name of the VM config to be deployed.
+- `ORKA_VM_NAME_PREFIX` - The prefix of the generated VM name. Defaults to `gl-runner`.
+- `ORKA_VM_USER` - User used to SSH to the VM.
+- `ORKA_SSH_KEY_FILE` - The private SSH key contents to use when connecting to the VM. This key was created earlier during the Orka base image setup.
 
 For more information about GitLab CI/CD environment variables, see [here][env-variables].
 
@@ -74,7 +72,7 @@ For more information about GitLab CI/CD environment variables, see [here][env-va
 
 For more information about the advanced settings you can use, see [here](template-settings.md).
 
-## Using the GitLab Custom еxecutor
+## Using the GitLab Custom executor
 
 Once the setup of the GitLab Runner is finished, you can run your CI/CD pipelines in Orka.
 
