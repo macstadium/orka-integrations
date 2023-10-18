@@ -34,7 +34,7 @@ function valid_ip {
             return 0
         fi
     fi
-    return -1
+    return 1
 }
 
 function map_ip {
@@ -50,20 +50,7 @@ function map_ip {
         done
     fi
 
-    echo $result
+    echo "$result"
 
     return 0
-}
-
-function revoke_token {
-    local token=${1}
-    local orka_endpoint=${2}
-    
-    api_version=$(curl -s $orka_endpoint/health-check | jq ".api_version" | sed 's/[\.\"]//g')
-
-    if [ $api_version -lt 211 ]; then
-        echo "Revoking token..."
-        token_response=$(curl -s -m 60 -H "Content-Type: application/json" -H "Authorization: Bearer $token" -X DELETE $orka_endpoint/token)
-        echo "Token revoked: $token_response"
-    fi
 }
