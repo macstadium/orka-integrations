@@ -50,7 +50,7 @@ To do that:
    **Note**: The Dockerfile supports the Alpine GitLab Runner docker images. By default the [Dockerfile](Dockerfile) uses the latest GitLab Alpine docker image. If you want to specify another version, use the `BASE_VERSION` build argument: `docker build . -t orka-gitlab --build-args BASE_VERSION=alpine-bleeding`.
 3. [Obtain a token][obtain-token]. The token will be used in the next step to register the newly installed GitLab Runner.
 4. [Register][register-runner] and start the Runner. This is the process that binds the Runner to GitLab. To register the Runner, run the following command:  
-   `docker run -e TOKEN=${REGISTRATION_TOKEN} orka-runner`. Replace the placeholders with the correct values.
+   `docker run -e TOKEN=${REGISTRATION_TOKEN} orka-gitlab`. Replace the placeholders with the correct values.
 5. Verify that the container has network visibility to the Orka environment. If the machine, running the container, is part of the Orka environment, skip this step. You can use any VPN client to connect to the Orka environment. For more information, see your Orka [IP Plan][ip-plan].
 
 **Note** If you want to set up the Runner manually, see [here](runner-manual-setup.md).
@@ -59,7 +59,7 @@ To do that:
 
 The provided scripts expect the following environment variables to be set:
 
-- `ORKA_ORKA_TOKEN` - User authentication to connect to the Orka environment. Created by running `orka3 user get-token` or `orka3 serviceaccount token <service-account>`.
+- `ORKA_TOKEN` - User authentication to connect to the Orka environment. Created by running `orka3 user get-token` or `orka3 serviceaccount token <service-account>`.
 - `ORKA_ENDPOINT` - The Orka endpoint. Usually, it is `http://10.221.188.20`.
 - `ORKA_CONFIG_NAME` - The name of the VM config to be deployed.
 - `ORKA_VM_NAME_PREFIX` - The prefix of the generated VM name. Defaults to `gl-runner`.
