@@ -66,12 +66,11 @@ The above is done by running `docker run -v {folder-containing-all-ssh-keys}:/bu
 
 The provided scripts expect the following environment variables to be set:
 
-* `ORKA_USER` - User used to connect to the Orka environment. Created by running `orka user create`
-* `ORKA_PASSWORD` - Password used to connect to the Orka environment. Created by running `orka user create`
-* `ORKA_ENDPOINT` - The Orka endpoint. Usually, it is `http://10.10.10.100`
-* `ORKA_VM_NAME` - The name of the VM to be deployed. This should match the VM config created [earlier](#set-up-an-orka-vm-config-for-the-ephemeral-agents)
-* `ORKA_VM_USER` - User used to SSH to the VM
-* `DEPLOY_TIMEOUT` - Number of seconds to wait for the VM to be deployed
+* `ORKA_TOKEN` - The authentication token to use.
+* `ORKA_ENDPOINT` - The Orka endpoint. Usually, it is `http://10.221.188.20`
+* `ORKA_CONFIG_NAME` - The name of the VM config to be deployed. This should match the VM config created [earlier](#set-up-an-orka-vm-config-for-the-ephemeral-agents)
+* `ORKA_VM_NAME_PREFIX` - The prefix used to generate the runner VM's name. Defaults to `buildkite-agent`.
+* `ORKA_VM_USER` - User used to SSH to the VM. Defaults to `admin`.
 
 ## Advanced configuration
 

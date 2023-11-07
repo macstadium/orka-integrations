@@ -22,7 +22,7 @@ To set up a GitLab Runner, you need to:
 3. [Register][register-runner] the Runner. This is the process that binds the Runner to GitLab.  
 **Note**: When asked to enter the executor type, select `shell`.
 
-## Using the GitLab Shell еxecutor
+## Using the GitLab Shell executor
 
 Once the setup of the GitLab Runner is finished, you can run your CI/CD pipelines in Orka.
 
