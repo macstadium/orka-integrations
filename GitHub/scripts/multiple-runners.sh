@@ -16,6 +16,7 @@ version=${RUNNER_VERSION:-"2.309.0"}
 type=${RUNNER_RUN_TYPE:-"service"}
 group=${RUNNER_GROUP:-"default"}
 labels=${RUNNER_LABELS:-"macOS"}
+cpu=${CPU_TYPE:-"x64"}
 settings_file=${SETTINGS_FILE:-"${currentDir}/settings.json"}
 
 while [[ "$#" -gt 0 ]]
@@ -53,6 +54,9 @@ case $1 in
       ;;
     -l|--runner_labels)
       labels=$2
+      ;;
+    -c|--cpu)
+      cpu=$2
       ;;
     -sf|--settings_file)
       settings_file=$2
@@ -135,6 +139,7 @@ for r in $(seq 1 "$runner_count"); do
         RUNNER_RUN_TYPE="$type"
         RUNNER_GROUP="$group"
         RUNNER_LABELS="$labels"
+        CPU_TYPE="$cpu"
     )
 
     echo 'Connecting to VM and setting up agent'

@@ -57,6 +57,7 @@ To set up multiple GitHub Actions runner, you need to:
         * `-l` or `--runner-labels` - (Optional) The additional labels of the runner, as a comma-separated list. If not specified, defaults to `macOS`.
         * `-tp` or `--runner_run_type` - (Optional) One of `command` or `service`. Choose `service` if you want the runner to start automatically when the VM starts. Choose `command` if you want to manually start the runner every time the VM starts. If not specified, defaults to `service`.  
         **Note** If you don't specify or you set to `service`, you need to enable automatic login during startup. To do that, follow these [instructions][auto-login].  
+        * `-c` or `--cpu` - (Optional) One of `x64` or `arm64`. Choose `x64` if the host has an Intel cpu. Choose `arm64` if the host has an Apple Silicon cpu. If not specified, defaults to `x64`.
         * `-sf` or `--settings_file` - (Optional) Advanced settings file location. Defaults to `{script_dir}/settings.json`. For more information see [here](#advanced-configuration).  
 
 ## Environment variables
