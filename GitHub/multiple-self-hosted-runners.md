@@ -44,6 +44,8 @@ To set up multiple GitHub Actions runner, you need to:
 2. On a machine that has connectivity to your Orka environment:
     * Install [jq][jq] - a command-line JSON processor used by the provided scripts.
     * Install [Orka 3][orka3-download]
+    * Make sure that orka3 is properly configured with the API URL. If it hasn't been configured yet, you can set it by running `orka3 config set --api-url "<orka-endpoint-url>"`. Usually, `<orka-endpoint-url>` is `http://10.221.188.20`.
+    * Make sure that you are logged into the CLI. If you're not already logged in, you can do so by running `orka3 login`.
     * Download [multiple-runners.sh](scripts/multiple-runners.sh), [setup-runner.sh](scripts/setup-runner.sh) and [base.sh](scripts/base.sh) files in the same directory.
     * Run the [multiple-runners.sh](scripts/multiple-runners.sh) script and provide the following arguments
         * `-t` or `--token` or `--github_token` - (Required) The GitHub token you obtained in **Step 1**.
