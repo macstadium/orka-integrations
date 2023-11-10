@@ -9,11 +9,11 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Run ShellCheck
-      uses: ludeeus/action-shellcheck@master
-      with:
-        scandir: ./GitLab/scripts/
-        check_together: yes
+      uses: ludeeus/action-shellcheck@2.0.0
       env:
-        SHELLCHECK_OPTS: -x
+        SHELLCHECK_OPTS: "-P ./GitLab/scripts"
+      with:
+        scandir: './GitLab/scripts/'
+        check_together: 'yes'
