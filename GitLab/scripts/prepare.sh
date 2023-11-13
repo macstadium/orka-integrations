@@ -17,7 +17,7 @@ echo "Authenticated."
 
 echo "Deploying a VM..."
 
-vm_info=$(orka3 vm deploy --config "$ORKA_CONFIG_NAME" --generate-name "$ORKA_VM_NAME_PREFIX" -o json)
+vm_info=$(orka3 vm deploy "$ORKA_VM_NAME_PREFIX" --config "$ORKA_CONFIG_NAME" --generate-name -o json)
 
 vm_name=$(echo "$vm_info" | jq -r '.[0]|.name')
 
