@@ -88,7 +88,7 @@ for r in $(seq 1 "$runner_count"); do
     echo "Booting VM #$r..."
 
     set +e
-    vm_info=$(orka3 vm deploy --config "$orka_config_name" --generate-name "$orka_vm_name_prefix" -o json 2>&1)
+    vm_info=$(orka3 vm deploy "$orka_vm_name_prefix" --config "$orka_config_name" --generate-name -o json 2>&1)
     if [ $? -ne 0 ]; then
         echo "VM deploy failed with $vm_info" 1>&2
         exit 1

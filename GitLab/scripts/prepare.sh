@@ -17,13 +17,7 @@ echo "Authenticated."
 
 echo "Deploying a VM..."
 
-set +e
-vm_info=$(orka3 vm deploy --config "$ORKA_CONFIG_NAME" --generate-name "$ORKA_VM_NAME_PREFIX" -o json 2>&1)
-if [ $? -ne 0 ]; then
-    echo "VM deploy failed with $vm_info" 1>&2
-    exit 1
-fi
-set -e
+vm_info=$(orka3 vm deploy "$ORKA_VM_NAME_PREFIX" --config "$ORKA_CONFIG_NAME" --generate-name -o json)
 
 vm_name=$(echo "$vm_info" | jq -r '.[0]|.name')
 
