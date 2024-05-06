@@ -1,11 +1,8 @@
-[!CAUTION] 
-# Deprecation Alert May 6, 2024
-
-This Github Actions Integration is now deprecated in favor of the new [one](https://github.com/macstadium/orka-github-actions-integration/).
-
 # Official Support Deprecation
 
-As of May 6, 2024 this folder is no longer officially supported. The code owner will still maintain and provide long term support, without official guarantee.
+## May 6, 2024
+
+As of May 6, 2024 this Github Actions Integration is no longer officially supported and is now deprecated in favor of the new [one](https://github.com/macstadium/orka-github-actions-integration/). The code owner will still maintain and provide long term support, without official guarantee.
 
 ## Orka-GitHub Actions Integration
 
