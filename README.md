@@ -1,8 +1,10 @@
+<p align="center"><img src="logo.svg" width="360"></p>
+
 # Orka by MacStadium Integrations
 
 [![MIT licensed][badge-license]](LICENSE)
 
-This repository contains integrations between [Orka by MacStadium][orka] and different CI/CD systems.  
+This repository contains integrations between [Orka by MacStadium][orka] and different CI/CD systems.
 
 ### Jenkins
 
