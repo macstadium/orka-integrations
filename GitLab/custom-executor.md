@@ -59,12 +59,12 @@ To do that:
 
 The provided scripts expect the following environment variables to be set:
 
-- `ORKA_TOKEN` - User authentication to connect to the Orka environment. Created by running `orka3 user get-token` or `orka3 serviceaccount token <service-account>`.
-- `ORKA_ENDPOINT` - The Orka endpoint. Usually, it is `http://10.221.188.20`.
-- `ORKA_CONFIG_NAME` - The name of the VM config to be deployed.
-- `ORKA_VM_NAME_PREFIX` - The prefix of the generated VM name. Defaults to `gl-runner`.
-- `ORKA_VM_USER` - User used to SSH to the VM.
-- `ORKA_SSH_KEY_FILE` - The private SSH key contents to use when connecting to the VM. This key was created earlier during the Orka base image setup.
+- `CUSTOM_ENV_ORKA_TOKEN` - User authentication to connect to the Orka environment. Created by running `orka3 user get-token` or `orka3 serviceaccount token <service-account>`.
+- `CUSTOM_ENV_ORKA_ENDPOINT` - The Orka endpoint. Usually, it is `http://10.221.188.20`.
+- `CUSTOM_ENV_ORKA_CONFIG_NAME` - The name of the VM config to be deployed.
+- `CUSTOM_ENV_ORKA_VM_NAME_PREFIX` - The prefix of the generated VM name. Defaults to `gl-runner`.
+- `CUSTOM_ENV_ORKA_VM_USER` - User used to SSH to the VM.
+- `CUSTOM_ENV_ORKA_SSH_KEY_FILE` - The private SSH key contents to use when connecting to the VM. This key was created earlier during the Orka base image setup.
 
 For more information about GitLab CI/CD environment variables, see [here][env-variables].
 
