@@ -14,5 +14,8 @@ RUN wget "https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/${ORKA_C
 
 COPY scripts /var/custom-executor
 
+# We need to export this environment variable here to ensure that the runner can be automatically deployed into a Kubernetes cluster.
+ENV KUBECONFIG=/root/.kube/config
+
 ENTRYPOINT ["dumb-init", "/var/custom-executor/start.sh"]
 CMD ["run", "--user=gitlab-runner", "--working-directory=/home/gitlab-runner"]
