@@ -47,7 +47,7 @@ To do that:
 
 1. Navigate to the [Dockerfile](Dockerfile) directory.
 2. Build a Docker image by running `docker build . -t orka-gitlab`.
-   **Note**: The Dockerfile supports the Alpine GitLab Runner docker images. By default the [Dockerfile](Dockerfile) uses the latest GitLab Alpine docker image. If you want to specify another version, use the `BASE_VERSION` build argument: `docker build . -t orka-gitlab --build-args BASE_VERSION=alpine-bleeding`.
+   **Note**: The Dockerfile supports the Alpine GitLab Runner docker images. By default the [Dockerfile](Dockerfile) uses the latest GitLab Alpine docker image. If you want to specify another version, use the `BASE_VERSION` build argument: `docker build . -t orka-gitlab --build-arg BASE_VERSION=alpine-bleeding`.
 3. [Obtain a token][obtain-token]. The token will be used in the next step to register the newly installed GitLab Runner.
 4. [Register][register-runner] and start the Runner. This is the process that binds the Runner to GitLab. To register the Runner, run the following command:  
    `docker run -e TOKEN=${REGISTRATION_TOKEN} orka-gitlab`. Replace the placeholders with the correct values.
