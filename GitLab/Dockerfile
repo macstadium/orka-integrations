@@ -5,7 +5,8 @@ FROM gitlab/gitlab-runner:${BASE_VERSION}
 ARG ORKA_CLI_VERSION=3.0.0
 
 RUN apk update && \
-    apk add jq curl openssh
+    apk --no-cache upgrade openssh-client && \
+    apk add --no-cache jq curl openssh
 
 RUN wget "https://cli-builds-public.s3.eu-west-1.amazonaws.com/official/${ORKA_CLI_VERSION}/orka3/linux/amd64/orka3.tar.gz" && \
     tar xzf orka3.tar.gz && \
