@@ -11,7 +11,7 @@ export ORKA_VM_USER=${CUSTOM_ENV_ORKA_VM_USER:-admin}
 ORKA_SSH_KEY_FILE=${CUSTOM_ENV_ORKA_SSH_KEY_FILE:-}
 
 mkdir -p ~/.ssh
-echo "$ORKA_SSH_KEY_FILE" > ~/.ssh/orka_deployment_key
+cat "$ORKA_SSH_KEY_FILE" > ~/.ssh/orka_deployment_key
 chmod 600 ~/.ssh/orka_deployment_key
 ORKA_SSH_KEY_FILE=~/.ssh/orka_deployment_key
 
