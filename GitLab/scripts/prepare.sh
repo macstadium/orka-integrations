@@ -53,7 +53,7 @@ for i in $(seq 1 30); do
         exit "$SYSTEM_FAILURE_EXIT_CODE"
     fi
 
-    sleep 1s
+    sleep 1
 done
 
 touch ~/.ssh/known_hosts
