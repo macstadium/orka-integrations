@@ -12,7 +12,7 @@ MacStadium provides a Jenkins plugin that integrates with Orka. It can be found 
 
 ### GitHub
 
-The integration guide for GitHub can be found [here](GitHub/README.md).
+The integration guide for GitHub Actions can be found [here](https://github.com/macstadium/orka-github-actions-integration).
 
 ### GitLab
 
@@ -21,6 +21,18 @@ The integration guide for GitLab can be found [here](GitLab/README.md).
 ### Buildkite
 
 The integration guide for Buildkite can be found [here](Buildkite/README.md).
+
+### Packer
+
+The integration guide for Packer can be found [here](https://github.com/macstadium/packer-plugin-macstadium-orka)
+
+### Tekton
+
+The integration guide for Tekron can be found [here](https://github.com/macstadium/orka-tekton)
+
+### TeamCity
+
+The integration guide for TeamCity can be found [here](https://github.com/macstadium/orka-teamcity-plugin)
 
 [orka]: https://www.macstadium.com/orka
 [jenkins-plugin]: https://plugins.jenkins.io/macstadium-orka
