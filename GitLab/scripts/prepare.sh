@@ -15,14 +15,19 @@ orka3 user set-token "$ORKA_TOKEN"
 
 echo "Authenticated."
 
-echo "Deploying a VM..."
+echo "Generating VM name..."
 
-vm_info=$(orka3 vm deploy "$ORKA_VM_NAME_PREFIX" --config "$ORKA_CONFIG_NAME" --generate-name -o json)
+vm_name=$(generate_vm_name)
 
-vm_name=$(echo "$vm_info" | jq -r '.[0]|.name')
+echo "Generated VM name: '$vm_name'"
 
-echo "VM deployed with name '$vm_name'"
 echo "$vm_name" > "$BUILD_ID"
+
+echo "Deploying VM with name '$vm_name'..."
+
+vm_info=$(orka3 vm deploy "$vm_name" --config "$ORKA_CONFIG_NAME" -o json)
+
+echo "VM deployed successfully."
 
 vm_ip=$(echo "$vm_info" | jq -r '.[0]|.ip')
 vm_ip=$(map_ip "$vm_ip")
