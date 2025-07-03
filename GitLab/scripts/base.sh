@@ -17,6 +17,21 @@ ORKA_SSH_KEY_FILE=~/.ssh/orka_deployment_key
 
 SETTINGS_FILE='/var/custom-executor/settings.json'
 
+function generate_random_suffix {
+    local chars="abcdefghijklmnopqrstuvwxyz0123456789"
+    local random_suffix=""
+    for i in {1..5}; do
+        random_suffix+="${chars:$((RANDOM % ${#chars})):1}"
+    done
+    echo "$random_suffix"
+}
+
+function generate_vm_name {
+    local random_suffix
+    random_suffix=$(generate_random_suffix)
+    echo "${ORKA_VM_NAME_PREFIX}-${random_suffix}"
+}
+
 function valid_ip {
     local ip=${1-}
     if [[ $ip =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
