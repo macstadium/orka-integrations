@@ -65,6 +65,7 @@ The provided scripts expect the following environment variables to be set:
 - `CUSTOM_ENV_ORKA_VM_NAME_PREFIX` - The prefix of the generated VM name. Defaults to `gl-runner`.
 - `CUSTOM_ENV_ORKA_VM_USER` - User used to SSH to the VM.
 - `CUSTOM_ENV_ORKA_SSH_KEY_FILE` - The private SSH key contents to use when connecting to the VM. This key was created earlier during the Orka base image setup.
+- `CUSTOM_ENV_VM_DEPLOYMENT_ATTEMPTS` - The number of attempts the executor tries to deploy a VM before it fails. Defaults to `1`. Note - GitLab automatically retries 3 times. This env var allows additional retry attempts.
 
 For more information about GitLab CI/CD environment variables, see [here][env-variables].
 
