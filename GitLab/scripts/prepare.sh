@@ -6,7 +6,7 @@ currentDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 source "${currentDir}/base.sh"
 
-VM_DEPLOYMENT_ATTEMPTS=${CUSTOM_ENV_VM_DEPLOYMENT_ATTEMPTS:-1}
+VM_DEPLOYMENT_ATTEMPTS=${VM_DEPLOYMENT_ATTEMPTS:-${CUSTOM_ENV_VM_DEPLOYMENT_ATTEMPTS:-1}}
 
 function cleanup_on_failure {
     if [ -f "$BUILD_ID" ]; then
