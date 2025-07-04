@@ -6,7 +6,20 @@ currentDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 source "${currentDir}/base.sh"
 
-trap system_failure ERR
+function cleanup_on_failure {
+    if [ -f "$BUILD_ID" ]; then
+        vm_name=$(<"$BUILD_ID")
+        echo "Failure detected. Cleaning up VM '$vm_name'..."
+        
+        orka3 vm delete "$vm_name" || echo "Failed to delete VM '$vm_name'"
+        
+        echo "VM cleanup completed."
+    fi
+    
+    system_failure
+}
+
+trap cleanup_on_failure ERR
 
 echo "Authenticating with Orka..."
 
