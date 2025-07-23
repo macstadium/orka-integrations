@@ -46,6 +46,12 @@ function valid_ip {
     return 255
 }
 
+# https://docs.gitlab.com/runner/executors/custom/#build-failure
+function build_failure {
+    exit "$BUILD_FAILURE_EXIT_CODE"
+}
+
+# https://docs.gitlab.com/runner/executors/custom/#system-failure
 function system_failure {
     if [ $? -eq 28 ]; then
         echo "Curl operation timed out. Exiting..."
