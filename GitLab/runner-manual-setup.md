@@ -1,38 +1,66 @@
 # Set up a GitLab Runner manually
 
-This guide explains how to set up a GitLab Runner manually. If you want to set it up automatically, using a Docker container, see [here](custom-executor.md#set-up-a-gitlab-runner).
+This guide walks through manual GitLab Runner setup. For automated setup using Docker, see the [Custom executor guide](custom-executor.md#set-up-a-gitlab-runner).
 
-## Requirements
+## Prerequisites
 
-- GitLab [Runner][runner]
-- [jq][jq] - command-line JSON processor used by the provided scripts
+Before you begin, ensure you have the following:
 
-## Set up a GitLab Runner
+- GitLab [Runner][runner] access and installation privileges
+- [jq][jq] (command-line JSON processor) - required by the integration scripts
+- An Orka base image with SSH key configured
+- Administrative access to the machine where the Runner will be installed
 
-To set up a GitLab Runner manually, you need to:  
+## Setup steps
 
-1. Install the Runner. You can install a GitLab Runner one of three ways: [manually][manual-install], via a [homebrew installation][homebrew-install], or in a Docker [container][docker-install].
-2. [Obtain a token][obtain-token]. The token will be used in **Step 3** to register the newly installed GitLab Runner.
-3. [Register][register-runner] the Runner. This is the process that binds the Runner to GitLab.  
-**Note**: When asked to enter the executor type, select `custom`.
-4. Copy the provided scripts to the Runner machine: [base.sh](scripts/base.sh), [prepare.sh](scripts/prepare.sh), [run.sh](scripts/run.sh), [cleanup.sh](scripts/cleanup.sh).  
-**Note**: All scripts should be in the same directory. For example you can add them to `/var/custom-runner`.
-5. Verify the scripts can be executed by running `chmod +x path_to_script` in the command line.
-6. Update the Runner config file:
-    * Verify the `builds_dir` and `cache_dir` settings are present.  
-    **Note**: Both the `builds_dir` and `cache_dir` paths must be present on the Orka VM, which will execute the build.
-    * Verify the `[runners.custom]` section is available and the `prepare_exec`, `run_exec` and `cleanup_exec` are set to point to the `prepare.sh`, `run.sh` and `cleanup.sh` scripts. 
+### 1. Install GitLab Runner
 
-    **Note**: A template config file is available [here](template-config.md).  
-    For information about the location of the file and its contents, see the GitLab Runner [configuration page][config-page] and the Custom executor [configuration page][custom-config-page].
-7. Verify [jq][jq] is installed. For more information, see [jq][jq] page.
-8. Verify that the private SSH key for connecting to the ephemeral VM is present on the Runner machine under this path `/root/.ssh/id_rsa`. This key was created earlier during the Orka base image setup.
+Install the Runner using one of these methods:
+
+- [Manual installation][manual-install] (binary)
+- [Homebrew installation][homebrew-install] (macOS)
+- [Docker container][docker-install]
+
+### 2. Obtain a registration token
+
+Follow GitLab's instructions to [obtain a registration token][obtain-token] for your project or group. You'll use this token in the next step.
+
+### 3. Register the Runner
+
+[Register the Runner][register-runner] with GitLab. When prompted for the executor type, select **custom**.
+
+### 4. Configure the integration scripts
+
+1. Copy these scripts to the Runner machine: [base.sh](scripts/base.sh), [prepare.sh](scripts/prepare.sh), [run.sh](scripts/run.sh), [cleanup.sh](scripts/cleanup.sh)
+2. Place all scripts in the same directory (e.g., `/var/custom-runner`)
+3. Make the scripts executable: `chmod +x /var/custom-runner/*.sh`
+
+### 5. Configure the Runner
+
+Edit the Runner configuration file to include:
+
+- **Build and cache directories**: Set `builds_dir` and `cache_dir` paths that exist on your Orka VMs
+- **Custom executor settings**: Configure the `[runners.custom]` section with paths to your scripts:
+  - `prepare_exec` → `prepare.sh`
+  - `run_exec` → `run.sh`
+  - `cleanup_exec` → `cleanup.sh`
+
+See the [template config file](template-config.md) for reference. For more details on GitLab Runner configuration, consult the [GitLab Runner config documentation][config-page] and [Custom executor documentation][custom-config-page].
+
+### 6. Verify SSH key setup
+
+Confirm that the private SSH key for Orka VM connections is located at `/root/.ssh/id_rsa` on the Runner machine. This key should have been created during your Orka base image setup.
+
+### 7. Test the installation
+
+Verify that jq is installed and accessible by entering: `jq --version`
 
 [manual-install]: https://docs.gitlab.com/runner/install/osx.html#manual-installation-official
 [homebrew-install]: https://docs.gitlab.com/runner/install/osx.html#homebrew-installation-alternative
 [docker-install]: https://docs.gitlab.com/runner/install/docker.html
 [obtain-token]: https://docs.gitlab.com/ee/ci/runners/#registering-a-specific-runner-with-a-project-registration-token
 [register-runner]: https://docs.gitlab.com/runner/register/index.html
+[config-page]: https://docs.gitlab.com/runner/configuration/
 [custom-config-page]: https://docs.gitlab.com/runner/executors/custom.html
 [jq]: https://stedolan.github.io/jq/
 [runner]: https://docs.gitlab.com/runner/

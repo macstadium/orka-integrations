@@ -1,6 +1,6 @@
-# Orka-GitLab Integration
+# Orka GitLab Integration
 
-The Orka-GitLab integration provides guides on how to use [Orka by MacStadium][orka] in a GitLab CI/CD pipeline.  
-You can find guide on how to use [GitLab Shell executor](shell-executor.md) and [GitLab Custom executor](custom-executor.md).
+The Orka GitLab integration enables you to use [Orka by MacStadium][orka] in your GitLab CI/CI pipelines.  
+Learn how to configure the [GitLab Shell executor](shell-executor.md) or the [GitLab Custom executor](custom-executor.md).
 
 [orka]: https://www.macstadium.com/orka
