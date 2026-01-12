@@ -1,6 +1,6 @@
 # Using a GitLab Shell Executor to Run CI/CD Pipelines in Orka
 
-This guide explains how to set up a GitLab [Shell][shell] executor in a MacStadium [Orka][orka] environment for your GitLab builds. 
+This guide explains how to set up a GitLab [Shell][shell] executor in a MacStadium [Orka][orka] environment for your GitLab builds.
 
 The Shell executor allows you to run builds locally on the machine where the GitLab [Runner][runner] is installed.
 
@@ -32,13 +32,13 @@ The communication between the GitLab Runner and the GitLab server is instantiate
 
 This means your Orka environment must have visibility to the GitLab server.
 
-Visibility from the GitLab server to the Orka environment is not required. 
+Visibility from the GitLab server to the Orka environment is not required.
 
 [shell]: https://docs.gitlab.com/runner/executors/shell.html
-[orka]: https://orkadocs.macstadium.com/docs/getting-started
-[cli]: https://orkadocs.macstadium.com/docs/example-cli-workflows
-[api]: https://documenter.getpostman.com/view/6574930/S1ETRGzt?version=latest
-[quick-start]: https://orkadocs.macstadium.com/docs/quick-start
+[orka]: https://support.macstadium.com/hc/en-us/articles/29904434271387-Orka-Overview
+[cli]: https://support.macstadium.com/hc/en-us/articles/42514244203419-Orka3-CLI-Overview-Configuration
+[api]: https://macstadium.github.io/orka-api-docs/
+[quick-start]: https://support.macstadium.com/hc/en-us/articles/28347375974555-Orka3-CLI-Quick-Start
 [runner]: https://docs.gitlab.com/runner/
 [manual-install]: https://docs.gitlab.com/runner/install/osx.html#manual-installation-official
 [homebrew-install]: https://docs.gitlab.com/runner/install/osx.html#homebrew-installation-alternative

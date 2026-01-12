@@ -86,14 +86,12 @@ This means your Orka environment must have visibility to the GitLab server.
 Visibility from the GitLab server to the Orka environment is not required.
 
 [custom]: https://docs.gitlab.com/runner/executors/custom.html
-[orka]: https://orkadocs.macstadium.com/docs/getting-started
-[cli]: https://orkadocs.macstadium.com/docs/example-cli-workflows
-[api]: https://documenter.getpostman.com/view/6574930/S1ETRGzt?version=latest
-[quick-start]: https://orkadocs.macstadium.com/docs/quick-start
+[orka]: https://support.macstadium.com/hc/en-us/articles/29904434271387-Orka-Overview
+[cli]: https://support.macstadium.com/hc/en-us/articles/42514244203419-Orka3-CLI-Overview-Configuration
+[api]: https://macstadium.github.io/orka-api-docs/
+[quick-start]: https://support.macstadium.com/hc/en-us/articles/28347375974555-Orka3-CLI-Quick-Start
 [docker]: https://www.docker.com/
 [obtain-token]: https://docs.gitlab.com/ee/ci/runners/#registering-a-specific-runner-with-a-project-registration-token
 [register-runner]: https://docs.gitlab.com/runner/register/index.html
-[custom-config-page]: https://docs.gitlab.com/runner/executors/custom.html
-[config-page]: https://docs.gitlab.com/runner/configuration/advanced-configuration.html
 [env-variables]: https://docs.gitlab.com/ee/ci/variables/
-[ip-plan]: https://orkadocs.macstadium.com/docs/orka-glossary#section-ip-plan
+[ip-plan]: https://support.macstadium.com/hc/en-us/articles/28230867289883-IP-Plan
