@@ -95,3 +95,4 @@ Visibility from the GitLab server to the Orka environment is not required.
 [register-runner]: https://docs.gitlab.com/runner/register/index.html
 [env-variables]: https://docs.gitlab.com/ee/ci/variables/
 [ip-plan]: https://support.macstadium.com/hc/en-us/articles/28230867289883-IP-Plan
+[runner]: https://docs.gitlab.com/runner/
