@@ -51,9 +51,10 @@ ssh-keygen -l -f ~/.ssh/orka_deployment_key
    orka3 serviceaccount token <service-account-name>
    ```
 
-3. Verify the endpoint is correct:
+3. Verify the endpoint is reachable:
    ```bash
-   curl -s "$ORKA_ENDPOINT/api/v1/health" | jq .
+   # This shows both client and server versions if connected
+   orka3 version
    ```
 
 **Note:** Tokens expire after 1 hour. For CI/CD pipelines, use [service accounts][serviceaccount] which provide longer-lived tokens.
@@ -82,7 +83,9 @@ ssh-keygen -l -f ~/.ssh/orka_deployment_key
 
 2. Test network connectivity:
    ```bash
-   curl -v "$ORKA_ENDPOINT/api/v1/health"
+   # Check if the endpoint is reachable
+   curl -s -o /dev/null -w "%{http_code}" "$ORKA_ENDPOINT/version"
+   # 200 = reachable, 000 = network issue
    ```
 
 3. If using VPN, verify your connection. See your [IP plan][ip-plan] for connection details.
@@ -297,14 +300,14 @@ The scripts handle this automatically by updating known_hosts, but if issues per
 1. Verify network connectivity:
    ```bash
    ping -c 3 $(echo "$ORKA_ENDPOINT" | sed 's|http://||')
-   curl -v "$ORKA_ENDPOINT/api/v1/health"
+   orka3 version  # Should show server version if connected
    ```
 
 2. If using VPN, verify your connection using your [IP plan][ip-plan] details.
 
 3. For Docker-based runners, ensure the container has network access:
    ```bash
-   docker run --rm orka-gitlab curl -v "$ORKA_ENDPOINT/api/v1/health"
+   docker run --rm --entrypoint orka3 orka-gitlab version
    ```
 
 ### IP mapping issues
