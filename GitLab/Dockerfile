@@ -2,7 +2,7 @@ ARG BASE_VERSION=alpine
 
 FROM gitlab/gitlab-runner:${BASE_VERSION}
 
-ARG ORKA_CLI_VERSION=3.0.0
+ARG ORKA_CLI_VERSION=3.5.2
 
 RUN apk update && \
     apk --no-cache upgrade openssh-client && \
