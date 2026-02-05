@@ -2,26 +2,6 @@
 
 This guide covers common issues and solutions when using the GitLab [Custom executor][custom] with [Orka][orka].
 
-## Quick diagnostics
-
-Before diving into specific issues, run these checks:
-
-```bash
-# Verify Orka CLI is installed and accessible
-orka3 version
-
-# Test Orka authentication
-orka3 config set --api-url "$ORKA_ENDPOINT"
-orka3 user set-token "$ORKA_TOKEN"
-orka3 vm list
-
-# Verify jq is installed (required by scripts)
-jq --version
-
-# Test SSH key validity
-ssh-keygen -l -f ~/.ssh/orka_deployment_key
-```
-
 ## Authentication issues
 
 ### Error: "unauthorized" or "401"
@@ -31,33 +11,21 @@ ssh-keygen -l -f ~/.ssh/orka_deployment_key
 - `orka3` commands return "unauthorized"
 
 **Causes:**
-- `ORKA_TOKEN` is invalid, expired, or not set
+- `ORKA_TOKEN` is invalid or expired
 - `ORKA_ENDPOINT` is incorrect
 
 **Solutions:**
 
-1. Verify the token is set correctly:
+1. Generate a new service account token:
    ```bash
-   echo "$ORKA_TOKEN" | head -c 20
-   ```
-
-2. Generate a new token:
-   ```bash
-   # For user authentication
-   orka3 login
-   orka3 user get-token
-
-   # For service accounts (CI/CD recommended)
    orka3 serviceaccount token <service-account-name>
    ```
 
-3. Verify the endpoint is reachable:
-   ```bash
-   # This shows both client and server versions if connected
-   orka3 version
-   ```
+2. Update the token in GitLab CI/CD settings:
+   - Go to Settings > CI/CD > Variables
+   - Update `ORKA_TOKEN` with the new token
 
-**Note:** Tokens expire after 1 hour. For CI/CD pipelines, use [service accounts][serviceaccount] which provide longer-lived tokens.
+**Note:** Service account tokens are valid for 1 year by default. For custom duration, use `--duration` flag.
 
 ### Error: "config not found" or "no such host"
 
@@ -71,24 +39,23 @@ ssh-keygen -l -f ~/.ssh/orka_deployment_key
 
 **Solutions:**
 
-1. Verify the endpoint format (include protocol, no trailing slash):
-   ```bash
-   # Correct
-   export ORKA_ENDPOINT="http://10.221.188.20"
+1. Verify the endpoint format in GitLab CI/CD Variables (include protocol, no trailing slash):
+   ```
+   # Correct format
+   http://10.221.188.20
 
-   # Incorrect
-   export ORKA_ENDPOINT="10.221.188.20"
-   export ORKA_ENDPOINT="http://10.221.188.20/"
+   # Incorrect formats
+   10.221.188.20          # Missing protocol
+   http://10.221.188.20/  # Trailing slash
    ```
 
-2. Test network connectivity:
+2. Test network connectivity from your runner:
    ```bash
-   # Check if the endpoint is reachable
-   curl -s -o /dev/null -w "%{http_code}" "$ORKA_ENDPOINT/version"
+   curl -s -o /dev/null -w "%{http_code}" "$ORKA_ENDPOINT/api/v1/cluster-info"
    # 200 = reachable, 000 = network issue
    ```
 
-3. If using VPN, verify your connection. See your [IP plan][ip-plan] for connection details.
+3. If using VPN, verify your connection. See your [IP plan][ip-plan] for details.
 
 ## VM deployment failures
 
@@ -101,13 +68,12 @@ ssh-keygen -l -f ~/.ssh/orka_deployment_key
 **Causes:**
 - `ORKA_CONFIG_NAME` doesn't exist or is misspelled
 - No available nodes with sufficient resources
-- Base image not found
 
 **Solutions:**
 
-1. Verify the VM config exists:
+1. If the error says "config does not exist", check the spelling of `ORKA_CONFIG_NAME` in your GitLab CI/CD Variables. Create the config if needed:
    ```bash
-   orka3 vm-config list | grep "$ORKA_CONFIG_NAME"
+   orka3 vm-config create <config-name> --image <image-name> --cpu <count>
    ```
 
 2. Check available node resources:
@@ -115,14 +81,8 @@ ssh-keygen -l -f ~/.ssh/orka_deployment_key
    orka3 node list -o wide
    ```
 
-3. Verify the base image exists:
-   ```bash
-   orka3 image list
-   ```
-
-4. Increase deployment attempts by setting the environment variable:
+3. Increase deployment attempts by setting the environment variable in `.gitlab-ci.yml`:
    ```yaml
-   # In .gitlab-ci.yml
    variables:
      VM_DEPLOYMENT_ATTEMPTS: "3"
    ```
@@ -135,24 +95,23 @@ ssh-keygen -l -f ~/.ssh/orka_deployment_key
 
 **Causes:**
 - VM deployment returned unexpected JSON format
-- jq parsing error
 - VM is in a failed state
 
 **Solutions:**
 
-1. Manually test deployment and inspect output:
+1. Deploy a VM manually and inspect the output:
    ```bash
-   orka3 vm deploy test-vm --config "$ORKA_CONFIG_NAME" -o json | jq .
+   orka3 vm deploy test-vm --config "$ORKA_CONFIG_NAME" -o json
    ```
 
-2. Verify jq is correctly installed:
+2. Check VM status:
    ```bash
-   echo '{"ip":"10.0.0.1"}' | jq -r '.ip'
+   orka3 vm list test-vm -o wide
    ```
 
-3. Check VM status after deployment:
+3. Delete the test VM after inspection:
    ```bash
-   orka3 vm list -o wide
+   orka3 vm delete test-vm
    ```
 
 ## SSH connection issues
@@ -165,31 +124,36 @@ ssh-keygen -l -f ~/.ssh/orka_deployment_key
 
 **Causes:**
 - SSH is not enabled on the base image
-- SSH key mismatch
-- Network/firewall blocking SSH port
+- SSH key not configured on the VM
 - VM is still booting
 
 **Solutions:**
 
-1. Verify SSH is enabled on your base image:
-   - Connect to a VM via VNC
-   - Check System Preferences > Sharing > Remote Login
+Since the runner automatically deletes failed VMs, deploy a VM manually to troubleshoot:
 
-2. Verify the SSH key matches:
+1. Deploy a test VM:
    ```bash
-   # On Runner: get public key fingerprint
-   ssh-keygen -l -f ~/.ssh/orka_deployment_key
-
-   # On VM: check authorized_keys
-   cat ~/.ssh/authorized_keys
+   orka3 vm deploy test-debug --config "$ORKA_CONFIG_NAME"
    ```
 
-3. Test SSH connectivity manually:
+2. Get connection details:
+   ```bash
+   orka3 vm list test-debug
+   ```
+
+3. Connect via Screen Sharing (VNC) to check:
+   - System Preferences > Sharing > Remote Login is enabled
+   - Your public key is in `~/.ssh/authorized_keys`
+
+4. Test SSH manually:
    ```bash
    ssh -i ~/.ssh/orka_deployment_key -p <PORT> admin@<VM_IP> "echo ok"
    ```
 
-4. Increase the wait time by modifying prepare.sh (line 66) if VMs need more boot time.
+5. Clean up:
+   ```bash
+   orka3 vm delete test-debug
+   ```
 
 ### Error: "Permission denied (publickey)"
 
@@ -207,42 +171,17 @@ ssh-keygen -l -f ~/.ssh/orka_deployment_key
 1. Verify the SSH key has no passphrase:
    ```bash
    # This should NOT prompt for a passphrase
-   ssh-keygen -y -f ~/.ssh/orka_deployment_key
+   ssh-keygen -y -f /path/to/key
    ```
 
 2. If the key has a passphrase, generate a new one without:
    ```bash
-   ssh-keygen -t rsa -b 4096 -f ~/.ssh/orka_key -N ""
+   ssh-keygen -t ed25519 -f ~/.ssh/orka_key -N ""
    ```
 
-3. Verify the `ORKA_VM_USER` matches the user on the VM (default: `admin`):
-   ```yaml
-   variables:
-     ORKA_VM_USER: "admin"
-   ```
+3. Verify `ORKA_VM_USER` in GitLab CI/CD Variables matches the user on the VM (default: `admin`).
 
-4. Ensure the public key is in the VM's `~/.ssh/authorized_keys`.
-
-### Error: "Host key verification failed"
-
-**Symptoms:**
-- SSH fails with host key errors
-- "REMOTE HOST IDENTIFICATION HAS CHANGED" warnings
-
-**Causes:**
-- Known hosts file has stale entries
-- Strict host key checking enabled
-
-**Solutions:**
-
-The scripts handle this automatically by updating known_hosts, but if issues persist:
-
-1. Clear the known hosts for the problematic IP:
-   ```bash
-   ssh-keygen -R "[<VM_IP>]:<PORT>"
-   ```
-
-2. The scripts use `StrictHostKeyChecking=no` during initial connection, so this should not block ephemeral VMs.
+4. Deploy a test VM and verify the public key is in `~/.ssh/authorized_keys`.
 
 ## Environment variable issues
 
@@ -253,16 +192,15 @@ The scripts handle this automatically by updating known_hosts, but if issues per
 - Variables are empty
 
 **Causes:**
-- Required environment variables not set
-- Variables not exported correctly in GitLab CI/CD
+- Required environment variables not configured in GitLab
 
 **Solutions:**
 
-1. Verify all required variables are set in your GitLab CI/CD settings or `.gitlab-ci.yml`:
+Verify all required variables are set in GitLab CI/CD settings (Settings > CI/CD > Variables):
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `ORKA_TOKEN` | Yes | Authentication token |
+| `ORKA_TOKEN` | Yes | Service account token |
 | `ORKA_ENDPOINT` | Yes | Orka API URL |
 | `ORKA_CONFIG_NAME` | Yes | VM config template name |
 | `ORKA_SSH_KEY_FILE` | Yes | Private SSH key contents |
@@ -270,17 +208,7 @@ The scripts handle this automatically by updating known_hosts, but if issues per
 | `ORKA_VM_NAME_PREFIX` | No | VM name prefix (default: `gl-runner`) |
 | `VM_DEPLOYMENT_ATTEMPTS` | No | Retry count (default: `1`) |
 
-2. For sensitive variables, use GitLab CI/CD [masked variables][masked-variables]:
-   - Go to Settings > CI/CD > Variables
-   - Add variables with "Masked" option enabled
-
-3. Verify variables are accessible in your job:
-   ```yaml
-   test_variables:
-     script:
-       - echo "Endpoint: $ORKA_ENDPOINT"
-       - echo "Config: $ORKA_CONFIG_NAME"
-   ```
+For sensitive variables like `ORKA_TOKEN` and `ORKA_SSH_KEY_FILE`, enable the "Masked" option.
 
 ## Network and connectivity issues
 
@@ -297,18 +225,14 @@ The scripts handle this automatically by updating known_hosts, but if issues per
 
 **Solutions:**
 
-1. Verify network connectivity:
+1. Test connectivity from the runner environment:
    ```bash
-   ping -c 3 $(echo "$ORKA_ENDPOINT" | sed 's|http://||')
-   orka3 version  # Should show server version if connected
+   curl -s -o /dev/null -w "%{http_code}" "$ORKA_ENDPOINT/api/v1/cluster-info"
    ```
 
 2. If using VPN, verify your connection using your [IP plan][ip-plan] details.
 
-3. For Docker-based runners, ensure the container has network access:
-   ```bash
-   docker run --rm --entrypoint orka3 orka-gitlab version
-   ```
+3. For Docker-based runners, ensure the container has network access to the Orka endpoint.
 
 ### IP mapping issues
 
@@ -322,44 +246,35 @@ The scripts handle this automatically by updating known_hosts, but if issues per
 
 **Solutions:**
 
-1. If your network requires IP mapping, create `/var/custom-executor/settings.json`:
-   ```json
-   {
-     "mappings": [
-       {
-         "private_host": "10.221.188.100",
-         "public_host": "203.0.113.100"
-       }
-     ]
-   }
-   ```
+If your network requires IP mapping, create `/var/custom-executor/settings.json`:
+```json
+{
+  "mappings": [
+    {
+      "private_host": "10.221.188.100",
+      "public_host": "203.0.113.100"
+    }
+  ]
+}
+```
 
-2. See [template-settings.md](template-settings.md) for configuration details.
+See [template-settings.md](template-settings.md) for configuration details.
 
 ## Job execution issues
 
-### Error: Build script fails but not a system failure
+### Build script fails
 
 **Symptoms:**
 - Job fails during run.sh
 - Error is from your CI/CD script, not the integration
 
-**Causes:**
-- Your build script has errors
-- Missing dependencies on the VM
-- Path or environment issues on the VM
+**Note:** The integration distinguishes between:
+- **Build failures**: Your script failed (returns script exit code)
+- **System failures**: Infrastructure failed (returns exit code 1)
 
-**Solutions:**
+If your build script fails, the issue is in your script, not the integration. Test your script on a standalone Orka VM.
 
-1. The integration correctly distinguishes between:
-   - **Build failures**: Your script failed (exit code from script)
-   - **System failures**: Infrastructure failed (exit code 1)
-
-2. Check your build script runs correctly on a standalone Orka VM.
-
-3. Ensure required tools are installed on your base image.
-
-### Error: Job hangs or times out
+### Job hangs or times out
 
 **Symptoms:**
 - Job runs but never completes
@@ -368,20 +283,14 @@ The scripts handle this automatically by updating known_hosts, but if issues per
 **Causes:**
 - Long-running process without output
 - SSH connection dropped
-- VM became unresponsive
 
 **Solutions:**
 
-1. The scripts use SSH keep-alive (60-second intervals for 60 minutes):
-   ```
-   ServerAliveInterval=60
-   ServerAliveCountMax=60
-   ```
+1. For long jobs, add periodic output to prevent GitLab timeout.
 
-2. For very long jobs, consider:
-   - Breaking into smaller jobs
-   - Adding periodic output to prevent timeout
-   - Increasing GitLab job timeout in project settings
+2. Consider breaking long jobs into smaller stages.
+
+3. Increase GitLab job timeout in project settings if needed.
 
 ## Cleanup issues
 
@@ -389,28 +298,17 @@ The scripts handle this automatically by updating known_hosts, but if issues per
 
 **Symptoms:**
 - VMs remain after job completion
-- `orka3 vm list` shows old runner VMs
 
 **Causes:**
 - Runner crashed before cleanup
-- cleanup.sh failed
 - Network issue during cleanup
 
 **Solutions:**
 
-1. Manually delete orphaned VMs:
-   ```bash
-   # List VMs with runner prefix
-   orka3 vm list | grep "gl-runner"
-
-   # Delete specific VM
-   orka3 vm delete <vm-name>
-
-   # Delete all runner VMs (use with caution)
-   orka3 vm list -o json | jq -r '.[].name' | grep "gl-runner" | xargs -I {} orka3 vm delete {}
-   ```
-
-2. Consider setting up a periodic cleanup job to remove stale VMs.
+Delete orphaned VMs manually:
+```bash
+orka3 vm delete <vm-name>
+```
 
 ## Getting help
 
@@ -427,7 +325,6 @@ If you're still experiencing issues:
 [orka]: https://support.macstadium.com/hc/en-us/articles/29904434271387-Orka-Overview
 [orka-docs]: https://support.macstadium.com/hc/en-us
 [ip-plan]: https://support.macstadium.com/hc/en-us/articles/28230867289883-IP-Plan
-[serviceaccount]: https://support.macstadium.com/hc/en-us/articles/28347450648987-Orka3-Service-Accounts
 [masked-variables]: https://docs.gitlab.com/ee/ci/variables/#mask-a-cicd-variable
 [runner-logs]: https://docs.gitlab.com/runner/faq/#how-can-i-get-a-debug-log
 [support]: https://support.macstadium.com/
