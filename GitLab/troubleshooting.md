@@ -12,7 +12,6 @@ This guide covers common issues and solutions when using the GitLab [Custom exec
 
 **Causes:**
 - `ORKA_TOKEN` is invalid or expired
-- `ORKA_ENDPOINT` is incorrect
 
 **Solutions:**
 
