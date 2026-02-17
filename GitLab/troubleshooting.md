@@ -48,13 +48,7 @@ This guide covers common issues and solutions when using the GitLab [Custom exec
    http://10.221.188.20/  # Trailing slash
    ```
 
-2. Test network connectivity from your runner:
-   ```bash
-   curl -s -o /dev/null -w "%{http_code}" "$ORKA_ENDPOINT/api/v1/cluster-info"
-   # 200 = reachable, 000 = network issue
-   ```
-
-3. If using VPN, verify your connection. See your [IP plan][ip-plan] for details.
+2. If the endpoint is correct but commands still fail, see [Runner cannot reach Orka endpoint](#runner-cannot-reach-orka-endpoint) for connectivity troubleshooting.
 
 ## VM deployment failures
 
