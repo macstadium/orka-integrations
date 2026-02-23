@@ -2,6 +2,24 @@
 
 This guide covers common issues and solutions when using the GitLab [Custom executor][custom] with [Orka][orka].
 
+## Setting environment variables
+
+The integration reads configuration from environment variables. There are two ways to set them:
+
+**Option A — GitLab CI/CD Variables** (available to the build only)
+Go to Settings > CI/CD > Variables and add each variable. This is the right place for variables like `ORKA_TOKEN` and `ORKA_CONFIG_NAME` that the runner scripts need during job execution.
+
+**Option B — Docker container startup** (available inside the container)
+Pass variables when starting the runner container:
+```
+docker run --env ORKA_ENDPOINT="http://10.221.188.20" ...
+```
+Use this for variables that need to be present at the container level, like `ORKA_ENDPOINT`.
+
+For sensitive variables like `ORKA_TOKEN`, enable the **Masked** option in GitLab so the value is hidden in job logs.
+
+For `ORKA_SSH_KEY_FILE`, prefer mounting the key file directly into the runner container (Option B) rather than storing the private key contents as a GitLab variable.
+
 ## Authentication issues
 
 ### Error: "unauthorized" or "401"
@@ -20,11 +38,9 @@ This guide covers common issues and solutions when using the GitLab [Custom exec
    orka3 serviceaccount token <service-account-name>
    ```
 
-2. Update the token in GitLab CI/CD settings:
-   - Go to Settings > CI/CD > Variables
-   - Update `ORKA_TOKEN` with the new token
+2. Update `ORKA_TOKEN` with the new token. See [Setting environment variables](#setting-environment-variables).
 
-**Note:** Service account tokens are valid for 1 year by default. For custom duration, use `--duration` flag.
+**Note:** Service account tokens are valid for 1 year by default. For custom duration, use `--duration` flag. Some Kubernetes control planes (e.g., EKS) do not allow long-lived tokens. In that case, use the `--no-expiration` flag instead.
 
 ### Error: "config not found" or "no such host"
 
@@ -38,7 +54,7 @@ This guide covers common issues and solutions when using the GitLab [Custom exec
 
 **Solutions:**
 
-1. Verify the endpoint format in GitLab CI/CD Variables (include protocol, no trailing slash):
+1. Verify the endpoint format (include protocol, no trailing slash). See [Setting environment variables](#setting-environment-variables).
    ```
    # Correct format
    http://10.221.188.20
@@ -71,14 +87,10 @@ This guide covers common issues and solutions when using the GitLab [Custom exec
 
 2. Check available node resources:
    ```bash
-   orka3 node list -o wide
+   orka3 node list
    ```
 
-3. Increase deployment attempts by setting the environment variable in `.gitlab-ci.yml`:
-   ```yaml
-   variables:
-     VM_DEPLOYMENT_ATTEMPTS: "3"
-   ```
+3. Set `VM_DEPLOYMENT_ATTEMPTS` to your desired retry count. See [Setting environment variables](#setting-environment-variables).
 
 ### Error: "Invalid ip" or "Invalid port"
 
@@ -92,20 +104,19 @@ This guide covers common issues and solutions when using the GitLab [Custom exec
 
 **Solutions:**
 
-1. Deploy a VM manually and inspect the output:
-   ```bash
-   orka3 vm deploy test-vm --config "$ORKA_CONFIG_NAME" -o json
-   ```
+This usually indicates a deeper infrastructure issue, not something the troubleshooting steps can directly fix.
 
-2. Check VM status:
-   ```bash
-   orka3 vm list test-vm -o wide
-   ```
+Deploy a VM manually and inspect the JSON output:
+```bash
+orka3 vm deploy test-vm --config "$ORKA_CONFIG_NAME" -o json
+```
 
-3. Delete the test VM after inspection:
-   ```bash
-   orka3 vm delete test-vm
-   ```
+If the manual deploy also returns unexpected output or fails, contact [MacStadium Support][support] with the full error.
+
+Delete the test VM after inspection:
+```bash
+orka3 vm delete test-vm
+```
 
 ## SSH connection issues
 
@@ -126,24 +137,20 @@ Since the runner automatically deletes failed VMs, deploy a VM manually to troub
 
 1. Deploy a test VM:
    ```bash
-   orka3 vm deploy test-debug --config "$ORKA_CONFIG_NAME"
+   # Connection details (IP and SSH port) are in the JSON output
+   orka3 vm deploy test-debug --config "$ORKA_CONFIG_NAME" -o json
    ```
 
-2. Get connection details:
-   ```bash
-   orka3 vm list test-debug
-   ```
-
-3. Connect via Screen Sharing (VNC) to check:
+2. Connect via Screen Sharing or VNC to check:
    - System Preferences > Sharing > Remote Login is enabled
    - Your public key is in `~/.ssh/authorized_keys`
 
-4. Test SSH manually:
+3. Test SSH manually:
    ```bash
    ssh -i ~/.ssh/orka_deployment_key -p <PORT> admin@<VM_IP> "echo ok"
    ```
 
-5. Clean up:
+4. Clean up:
    ```bash
    orka3 vm delete test-debug
    ```
@@ -158,6 +165,7 @@ Since the runner automatically deletes failed VMs, deploy a VM manually to troub
 - SSH key has a passphrase (not supported)
 - Wrong SSH user
 - SSH key not in VM's authorized_keys
+- SSH key doesn't match the one registered in the VM's authorized_keys
 
 **Solutions:**
 
@@ -172,7 +180,7 @@ Since the runner automatically deletes failed VMs, deploy a VM manually to troub
    ssh-keygen -t ed25519 -f ~/.ssh/orka_key -N ""
    ```
 
-3. Verify `ORKA_VM_USER` in GitLab CI/CD Variables matches the user on the VM (default: `admin`).
+3. Verify `ORKA_VM_USER` matches the user on the VM (default: `admin`). See [Setting environment variables](#setting-environment-variables).
 
 4. Deploy a test VM and verify the public key is in `~/.ssh/authorized_keys`.
 
@@ -189,14 +197,14 @@ Since the runner automatically deletes failed VMs, deploy a VM manually to troub
 
 **Solutions:**
 
-Verify all required variables are set in GitLab CI/CD settings (Settings > CI/CD > Variables):
+See [Setting environment variables](#setting-environment-variables) for how to configure these. Verify all required variables are set:
 
 | Variable | Required | Description |
 |----------|----------|-------------|
 | `ORKA_TOKEN` | Yes | Service account token |
 | `ORKA_ENDPOINT` | Yes | Orka API URL |
 | `ORKA_CONFIG_NAME` | Yes | VM config template name |
-| `ORKA_SSH_KEY_FILE` | Yes | Private SSH key contents |
+| `ORKA_SSH_KEY_FILE` | Yes | Private SSH key contents. Recommended: mount the key file into the runner container rather than storing key contents as a GitLab variable. See [Setting environment variables](#setting-environment-variables). |
 | `ORKA_VM_USER` | No | SSH user (default: `admin`) |
 | `ORKA_VM_NAME_PREFIX` | No | VM name prefix (default: `gl-runner`) |
 | `VM_DEPLOYMENT_ATTEMPTS` | No | Retry count (default: `1`) |
