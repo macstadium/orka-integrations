@@ -24,5 +24,5 @@ This guide explains how to set up a Buildkite proxy agent manually. If you want 
 [agent-instructions]: https://buildkite.com/docs/agent/v3/installation
 [jq]: https://stedolan.github.io/jq/
 [multiple-ssh-keys]: https://buildkite.com/docs/agent/v3/ssh-keys#using-multiple-keys-with-ssh-agent
-[ip-plan]: https://orkadocs.macstadium.com/docs/orka-glossary#section-ip-plan
+[ip-plan]: https://docs.macstadium.com/macstadium/macstadium-overview/ip-plan
 [agent]: https://buildkite.com/docs/agent/v3
