@@ -37,7 +37,7 @@ You will later use this base image to create a VM config (a container template) 
     brew install buildkite-agent
     ```
 5. Verify that SSH login with a private key is enabled. SSH login is used by the proxy agent to communicate with the ephemeral agent.
-6. On your local machine, run `orka image save`. The command saves the base image in Orka.
+6. On your local machine, save the VM as a new base image: `orka3 vm save <vm-name> <new-image-name>`.
 
 ## Set up an Orka VM config for the ephemeral agents
 
@@ -66,11 +66,15 @@ The above is done by running `docker run -v {folder-containing-all-ssh-keys}:/bu
 
 The provided scripts expect the following environment variables to be set:
 
-* `ORKA_TOKEN` - The authentication token to use.
+* `ORKA_TOKEN` - The authentication token to use. Use a service account token, not a personal one, personal tokens expire after one hour and will break a long-running proxy agent. Create one with `orka3 sa create <name>` and `orka3 sa token <name>`.
 * `ORKA_ENDPOINT` - The Orka endpoint. Usually, it is `http://10.221.188.20`
 * `ORKA_CONFIG_NAME` - The name of the VM config to be deployed. This should match the VM config created [earlier](#set-up-an-orka-vm-config-for-the-ephemeral-agents)
 * `ORKA_VM_NAME_PREFIX` - The prefix used to generate the runner VM's name. Defaults to `buildkite-agent`.
 * `ORKA_VM_USER` - User used to SSH to the VM. Defaults to `admin`.
+
+## Secrets and credentials
+
+This integration doesn't add or restrict how you manage secrets for your build jobs. Credentials for jobs running on the ephemeral agent are handled the same way they are for any Buildkite agent, through your pipeline's normal Buildkite secrets and environment variable configuration. If your requirements call for centralized secret management (Vault, AWS Secrets Manager, or similar), configure that the same way you would for any other Buildkite agent, it's a pipeline/workflow decision, not something this integration mediates.
 
 ## Advanced configuration
 
@@ -116,14 +120,14 @@ For example: `BUILDKITE_AGENT_ACCESS_TOKEN_SUBAGENT` overwrites `BUILDKITE_AGENT
 
 For more information about Buildkite environment variables, see [here][env-variables].
 
-[orka]: https://orkadocs.macstadium.com/docs/getting-started
+[orka]: https://docs.macstadium.com/orka/orka-overview/orka-overview
 [agent]: https://buildkite.com/docs/agent/v3
-[cli]: https://orkadocs.macstadium.com/docs/example-cli-workflows
+[cli]: https://docs.macstadium.com/orka/quick-start-guides/orka3-cli-quick-start
 [api]: https://documenter.getpostman.com/view/6574930/S1ETRGzt?version=latest
-[quick-start]: https://orkadocs.macstadium.com/docs/quick-start
+[quick-start]: https://docs.macstadium.com/orka/quick-start-guides/orka3-cli-quick-start
 [pipeline]: https://buildkite.com/docs/pipelines
 [env-variables]: https://buildkite.com/docs/pipelines/environment-variables
-[ip-plan]: https://orkadocs.macstadium.com/docs/orka-glossary#section-ip-plan
+[ip-plan]: https://docs.macstadium.com/macstadium/macstadium-overview/ip-plan
 [bootstrap]: https://buildkite.com/docs/agent/v3/cli-bootstrap
 [homebrew]: https://brew.sh/
 [agent-token]: https://buildkite.com/docs/agent/v3/tokens

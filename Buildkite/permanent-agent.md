@@ -30,10 +30,10 @@ This means your Orka environment must have visibility to the Buildkite server.
 
 Visibility from the Buildkite server to the Orka environment is not required. 
 
-[orka]: https://orkadocs.macstadium.com/docs/getting-started
+[orka]: https://docs.macstadium.com/orka/orka-overview/orka-overview
 [agent]: https://buildkite.com/docs/agent/v3
-[cli]: https://orkadocs.macstadium.com/docs/example-cli-workflows
+[cli]: https://docs.macstadium.com/orka/quick-start-guides/orka3-cli-quick-start
 [api]: https://documenter.getpostman.com/view/6574930/S1ETRGzt?version=latest
-[quick-start]: https://orkadocs.macstadium.com/docs/quick-start
+[quick-start]: https://docs.macstadium.com/orka/quick-start-guides/orka3-cli-quick-start
 [agent-instructions]: https://buildkite.com/docs/agent/v3/installation
 [jq]: https://stedolan.github.io/jq/
