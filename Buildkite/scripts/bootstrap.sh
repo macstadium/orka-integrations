@@ -15,11 +15,11 @@ ORKA_VM_USER="${ORKA_VM_USER:-admin}"
 
 echo "~~~ Deploying ephemeral agent"
 
-orka3 config set --api-url "$ORKA_ENDPOINT"
-orka3 user set-token "$ORKA_TOKEN"
+orka config set --api-url "$ORKA_ENDPOINT"
+orka user set-token "$ORKA_TOKEN"
 
 set +e
-vm_info=$(orka3 vm deploy "$ORKA_VM_NAME_PREFIX" --config "$ORKA_CONFIG_NAME" --generate-name -o json 2>&1)
+vm_info=$(orka vm deploy "$ORKA_VM_NAME_PREFIX" --config "$ORKA_CONFIG_NAME" --generate-name -o json 2>&1)
 if [ $? -ne 0 ]; then
     echo "VM deploy failed with $vm_info" 1>&2
     exit 1

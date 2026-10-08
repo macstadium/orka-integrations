@@ -1,5 +1,7 @@
 # Using a GitLab Custom Executor to Run CI/CD Pipelines in Orka
 
+> **Orka 4.0 renamed the CLI from `orka3` to `orka`.** The commands below use `orka`. On Orka 3.x, use `orka3`. Runner images built for Orka 4.0 and later include an `orka3` symlink, so older custom scripts keep working.
+
 This guide explains how to set up a GitLab [Custom][custom] executor in a MacStadium [Orka][orka] environment for your GitLab builds.
 
 The Custom executor allows you to run builds on environments not supported natively by the GitLab [Runner][runner] (such as Orka). It also provides the flexibility to define how the environment should be set up and cleaned up.
@@ -31,7 +33,7 @@ You will later use this base image to create a VM config (a container template) 
    **Note**: The VM IP and the SSH and VNC ports are displayed once the VM is deployed in Orka.
 3. Verify that SSH login with a private key is enabled. SSH login is used by the Custom executor to communicate with the Orka VM.  
    **Note**: The private ssh key must not have password as the GitLab Runner will not be able to load it.
-4. On your local machine, run `orka3 vm <VM_NAME> commit`. The command saves the base image in Orka.
+4. On your local machine, run `orka vm commit <VM_NAME>`. The command saves the base image in Orka.
 
 ## Set up an Orka VM config for the ephemeral agents
 
@@ -59,7 +61,7 @@ To do that:
 
 The provided scripts expect the following environment variables to be set:
 
-- `ORKA_TOKEN` - User authentication to connect to the Orka environment. Created by running `orka3 user get-token` or `orka3 serviceaccount token <service-account>`.
+- `ORKA_TOKEN` - User authentication to connect to the Orka environment. Created by running `orka user get-token` or `orka serviceaccount token <service-account>`.
 - `ORKA_ENDPOINT` - The Orka endpoint. Usually, it is `http://10.221.188.20`.
 - `ORKA_CONFIG_NAME` - The name of the VM config to be deployed.
 - `ORKA_VM_NAME_PREFIX` - The prefix of the generated VM name. Defaults to `gl-runner`.

@@ -10,5 +10,5 @@ CONNECTION_INFO_FILE=/tmp/$BUILDKITE_JOB_ID-connection-info
 if [[ -f "$CONNECTION_INFO_FILE" ]]; then
     vm_name=$(<"$CONNECTION_INFO_FILE")
 
-    orka3 vm delete "$vm_name"
+    orka vm delete "$vm_name"
 fi

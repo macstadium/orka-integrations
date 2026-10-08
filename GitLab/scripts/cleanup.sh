@@ -15,7 +15,7 @@ if [[ -f "$BUILD_ID" ]]; then
 
     echo "Deleting VM '$vm_name'..."
 
-    orka3 vm delete "$vm_name"
+    orka vm delete "$vm_name"
 
     echo "VM deleted."
 fi

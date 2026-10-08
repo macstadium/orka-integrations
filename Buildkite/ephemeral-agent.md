@@ -1,5 +1,7 @@
 # Using an Еphemeral Buildkite Аgent to Run CI/CD Pipelines in Orka
 
+> **Orka 4.0 renamed the CLI from `orka3` to `orka`.** The commands below use `orka`. On Orka 3.x, use `orka3`. Runner images built for Orka 4.0 and later include an `orka3` symlink, so older custom scripts keep working.
+
 This guide explains how to set up an ephemeral Buildkite agent in an [Orka by MacStadium][orka] environment. 
 
 The ephemeral agent is used to run a single Buildkite job in a Buildkite [pipeline][pipeline].  
@@ -37,7 +39,7 @@ You will later use this base image to create a VM config (a container template) 
     brew install buildkite-agent
     ```
 5. Verify that SSH login with a private key is enabled. SSH login is used by the proxy agent to communicate with the ephemeral agent.
-6. On your local machine, save the VM as a new base image: `orka3 vm save <vm-name> <new-image-name>`.
+6. On your local machine, save the VM as a new base image: `orka vm save <vm-name> <new-image-name>`.
 
 ## Set up an Orka VM config for the ephemeral agents
 
@@ -66,7 +68,7 @@ The above is done by running `docker run -v {folder-containing-all-ssh-keys}:/bu
 
 The provided scripts expect the following environment variables to be set:
 
-* `ORKA_TOKEN` - The authentication token to use. Use a service account token, not a personal one, personal tokens expire after one hour and will break a long-running proxy agent. Create one with `orka3 sa create <name>` and `orka3 sa token <name>`.
+* `ORKA_TOKEN` - The authentication token to use. Use a service account token, not a personal one, personal tokens expire after one hour and will break a long-running proxy agent. Create one with `orka sa create <name>` and `orka sa token <name>`.
 * `ORKA_ENDPOINT` - The Orka endpoint. Usually, it is `http://10.221.188.20`
 * `ORKA_CONFIG_NAME` - The name of the VM config to be deployed. This should match the VM config created [earlier](#set-up-an-orka-vm-config-for-the-ephemeral-agents)
 * `ORKA_VM_NAME_PREFIX` - The prefix used to generate the runner VM's name. Defaults to `buildkite-agent`.
