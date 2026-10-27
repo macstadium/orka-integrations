@@ -55,7 +55,8 @@ On the machine where you want to run the proxy agent container:
 
 1. Navigate to the [Dockerfile](Dockerfile) directory.
 2. Build a Docker image by running `docker build . -t orka-buildkite`.
-**Note**: By default the [Dockerfile](Dockerfile) uses the latest Buildkite docker image. If you want to specify another version, use the `BASE_VERSION` build argument: `docker build . -t orka-buildkite --build-args BASE_VERSION=3`.
+**Note**: By default the [Dockerfile](Dockerfile) uses the latest Buildkite docker image. If you want to specify another version, use the `BASE_VERSION` build argument: `docker build . -t orka-buildkite --build-arg BASE_VERSION=3`.  
+**Note**: The image installs the Orka 4.0 CLI by default. If your Orka cluster runs 3.x, set `ORKA_CLI_VERSION` to the 3.6 CLI version that matches your cluster: `docker build . -t orka-buildkite --build-arg ORKA_CLI_VERSION=<3.6.x>`.
 3. Run a container using the docker image you built and pass your [Buildkite token][agent-token] as a variable.
 Verify that the private SSH key for connecting to the ephemeral agent is mounted in the `buildkite-secrets` folder on the container. This key was created earlier during the Orka base image setup.  
 Verify that the private SSH keys for the code repositories used by the build job are mounted in the `buildkite-secrets` folder on the container.  
