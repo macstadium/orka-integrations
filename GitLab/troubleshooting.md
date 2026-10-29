@@ -1,5 +1,7 @@
 # Troubleshooting the GitLab Orka Integration
 
+> **Orka 4.0 renamed the CLI from `orka3` to `orka`.** The commands below use `orka`. On Orka 3.x, use `orka3`. Runner images built for Orka 4.0 and later include an `orka3` symlink, so older custom scripts keep working.
+
 This guide covers common issues and solutions when using the GitLab [Custom executor][custom] with [Orka][orka].
 
 ## Setting environment variables
@@ -26,7 +28,7 @@ For `ORKA_SSH_KEY_FILE`, prefer mounting the key file directly into the runner c
 
 **Symptoms:**
 - VM deployment fails with authentication errors
-- `orka3` commands return "unauthorized"
+- `orka` commands return "unauthorized"
 
 **Causes:**
 - `ORKA_TOKEN` is invalid or expired
@@ -35,7 +37,7 @@ For `ORKA_SSH_KEY_FILE`, prefer mounting the key file directly into the runner c
 
 1. Generate a new service account token:
    ```bash
-   orka3 serviceaccount token <service-account-name>
+   orka serviceaccount token <service-account-name>
    ```
 
 2. Update `ORKA_TOKEN` with the new token. See [Setting environment variables](#setting-environment-variables).
@@ -82,12 +84,12 @@ For `ORKA_SSH_KEY_FILE`, prefer mounting the key file directly into the runner c
 
 1. If the error says "config does not exist", check the spelling of `ORKA_CONFIG_NAME` in your GitLab CI/CD Variables. Create the config if needed:
    ```bash
-   orka3 vm-config create <config-name> --image <image-name> --cpu <count>
+   orka vm-config create <config-name> --image <image-name> --cpu <count>
    ```
 
 2. Check available node resources:
    ```bash
-   orka3 node list
+   orka node list
    ```
 
 3. Set `VM_DEPLOYMENT_ATTEMPTS` to your desired retry count. See [Setting environment variables](#setting-environment-variables).
@@ -108,14 +110,14 @@ This usually indicates a deeper infrastructure issue, not something the troubles
 
 Deploy a VM manually and inspect the JSON output:
 ```bash
-orka3 vm deploy test-vm --config "$ORKA_CONFIG_NAME" -o json
+orka vm deploy test-vm --config "$ORKA_CONFIG_NAME" -o json
 ```
 
 If the manual deploy also returns unexpected output or fails, contact [MacStadium Support][support] with the full error.
 
 Delete the test VM after inspection:
 ```bash
-orka3 vm delete test-vm
+orka vm delete test-vm
 ```
 
 ## SSH connection issues
@@ -138,7 +140,7 @@ Since the runner automatically deletes failed VMs, deploy a VM manually to troub
 1. Deploy a test VM:
    ```bash
    # Connection details (IP and SSH port) are in the JSON output
-   orka3 vm deploy test-debug --config "$ORKA_CONFIG_NAME" -o json
+   orka vm deploy test-debug --config "$ORKA_CONFIG_NAME" -o json
    ```
 
 2. Connect via Screen Sharing or VNC to check:
@@ -152,7 +154,7 @@ Since the runner automatically deletes failed VMs, deploy a VM manually to troub
 
 4. Clean up:
    ```bash
-   orka3 vm delete test-debug
+   orka vm delete test-debug
    ```
 
 ### Error: "Permission denied (publickey)"
@@ -308,7 +310,7 @@ If your build script fails, the issue is in your script, not the integration. Te
 
 Delete orphaned VMs manually:
 ```bash
-orka3 vm delete <vm-name>
+orka vm delete <vm-name>
 ```
 
 ## Getting help

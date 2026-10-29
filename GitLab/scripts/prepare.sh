@@ -13,7 +13,7 @@ function cleanup_on_failure {
         vm_name=$(<"$BUILD_ID")
         echo "Failure detected. Cleaning up VM '$vm_name'..." >&2
         
-        orka3 vm delete "$vm_name" || echo "Failed to delete VM '$vm_name'" >&2
+        orka vm delete "$vm_name" || echo "Failed to delete VM '$vm_name'" >&2
         
         echo "VM cleanup completed." >&2
     fi
@@ -25,7 +25,7 @@ function delete_vm_and_cleanup {
     if [ -f "$BUILD_ID" ]; then
         vm_name=$(<"$BUILD_ID")
         echo "Deleting VM '$vm_name'..." >&2
-        orka3 vm delete "$vm_name" || echo "Failed to delete VM '$vm_name'" >&2
+        orka vm delete "$vm_name" || echo "Failed to delete VM '$vm_name'" >&2
         rm -f "$BUILD_ID"
         rm -f "$CONNECTION_INFO_ID"
     fi
@@ -36,7 +36,7 @@ function attempt_deployment {
     
     echo "Deploying VM with name '$vm_name'..."
     
-    if ! vm_info=$(orka3 vm deploy "$vm_name" --config "$ORKA_CONFIG_NAME" -o json); then
+    if ! vm_info=$(orka vm deploy "$vm_name" --config "$ORKA_CONFIG_NAME" -o json); then
         echo "VM deployment failed" >&2
         return 1
     fi
@@ -87,8 +87,8 @@ trap cleanup_on_failure ERR
 
 echo "Authenticating with Orka..."
 
-orka3 config set --api-url "$ORKA_ENDPOINT"
-orka3 user set-token "$ORKA_TOKEN"
+orka config set --api-url "$ORKA_ENDPOINT"
+orka user set-token "$ORKA_TOKEN"
 
 echo "Authenticated."
 
