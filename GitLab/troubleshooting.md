@@ -20,7 +20,7 @@ Use this for variables that need to be present at the container level, like `ORK
 
 For sensitive variables like `ORKA_TOKEN`, enable the **Masked** option in GitLab so the value is hidden in job logs.
 
-For `ORKA_SSH_KEY_FILE`, prefer mounting the key file directly into the runner container (Option B) rather than storing the private key contents as a GitLab variable.
+`ORKA_SSH_KEY_FILE` is the exception: set it only with Option A, as a CI/CD variable of type Variable that holds the private key contents. The scripts read it from the CI/CD variable and write it to `~/.ssh/orka_deployment_key`, so a key file mounted into the container or an `--env` value is ignored. Every other variable works with either option, and if both are set, the container value wins.
 
 ## Authentication issues
 
@@ -206,12 +206,12 @@ See [Setting environment variables](#setting-environment-variables) for how to c
 | `ORKA_TOKEN` | Yes | Service account token |
 | `ORKA_ENDPOINT` | Yes | Orka API URL |
 | `ORKA_CONFIG_NAME` | Yes | VM config template name |
-| `ORKA_SSH_KEY_FILE` | Yes | Private SSH key contents. Recommended: mount the key file into the runner container rather than storing key contents as a GitLab variable. See [Setting environment variables](#setting-environment-variables). |
+| `ORKA_SSH_KEY_FILE` | Yes | Private SSH key contents, set as a GitLab CI/CD variable only. A mounted key file is ignored. See [Setting environment variables](#setting-environment-variables). |
 | `ORKA_VM_USER` | No | SSH user (default: `admin`) |
 | `ORKA_VM_NAME_PREFIX` | No | VM name prefix (default: `gl-runner`) |
 | `VM_DEPLOYMENT_ATTEMPTS` | No | Retry count (default: `1`) |
 
-For sensitive variables like `ORKA_TOKEN` and `ORKA_SSH_KEY_FILE`, enable the "Masked" option.
+For sensitive variables like `ORKA_TOKEN`, enable the "Masked" option. GitLab can't mask multi-line values, so `ORKA_SSH_KEY_FILE` can't be masked. Limit who can view CI/CD settings instead.
 
 ## Network and connectivity issues
 
