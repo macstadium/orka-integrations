@@ -125,9 +125,9 @@ For more information about Buildkite environment variables, see [here][env-varia
 
 [orka]: https://docs.macstadium.com/orka/orka-overview/orka-overview
 [agent]: https://buildkite.com/docs/agent/v3
-[cli]: https://docs.macstadium.com/orka/quick-start-guides/orka3-cli-quick-start
+[cli]: https://docs.macstadium.com/orka/quick-start-guides/orka-cli-quick-start
 [api]: https://documenter.getpostman.com/view/6574930/S1ETRGzt?version=latest
-[quick-start]: https://docs.macstadium.com/orka/quick-start-guides/orka3-cli-quick-start
+[quick-start]: https://docs.macstadium.com/orka/quick-start-guides/orka-cli-quick-start
 [pipeline]: https://buildkite.com/docs/pipelines
 [env-variables]: https://buildkite.com/docs/pipelines/environment-variables
 [ip-plan]: https://docs.macstadium.com/macstadium/macstadium-overview/ip-plan
