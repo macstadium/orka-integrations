@@ -32,8 +32,8 @@ Visibility from the Buildkite server to the Orka environment is not required.
 
 [orka]: https://docs.macstadium.com/orka/orka-overview/orka-overview
 [agent]: https://buildkite.com/docs/agent/v3
-[cli]: https://docs.macstadium.com/orka/quick-start-guides/orka3-cli-quick-start
+[cli]: https://docs.macstadium.com/orka/quick-start-guides/orka-cli-quick-start
 [api]: https://documenter.getpostman.com/view/6574930/S1ETRGzt?version=latest
-[quick-start]: https://docs.macstadium.com/orka/quick-start-guides/orka3-cli-quick-start
+[quick-start]: https://docs.macstadium.com/orka/quick-start-guides/orka-cli-quick-start
 [agent-instructions]: https://buildkite.com/docs/agent/v3/installation
 [jq]: https://stedolan.github.io/jq/
